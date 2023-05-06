@@ -1,0 +1,15 @@
+---
+apiVersion: riskified.com/v1alpha1
+kind: DynamicEnv
+metadata:
+  name: dynamicenv-sample
+spec:
+  istioMatches:
+    - headers:
+        end-user:
+          exact: jason
+  subsets:
+    - name: reviews
+      namespace: dynenv-tutorial
+      image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.2
+...
