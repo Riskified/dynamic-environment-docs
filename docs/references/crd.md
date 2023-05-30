@@ -1,4 +1,4 @@
-# API Reference
+# DynamicEnv CRD Reference
 
 ## Packages
 
@@ -38,7 +38,7 @@ _Appears in:_
 | `containerName` _string_                                                                                    | Container name to override in multiple containers' environment. If not specified we will use the first container.                     |
 | `image` _string_                                                                                            | Docker image name overridden to the desired subset The Docker image found in the original deployment is used if this is not provided. |
 | `command` _string array_                                                                                    | Entrypoint array overridden to the desired subset The docker image's ENTRYPOINT is used if this is not provided.                      |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.22/#envvar-v1-core) array_ | Additional environment variable to the given deployment                                                                               |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#envvar-v1-core) array_ | Additional environment variable to the given deployment                                                                               |
 
 #### DynamicEnv
 
@@ -48,7 +48,7 @@ DynamicEnv is the Schema for the dynamicenvs API
 |--------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------|
 | `apiVersion` _string_                                                                                              | `riskified.com/v1alpha1`                                        |
 | `kind` _string_                                                                                                    | `DynamicEnv`                                                    |
-| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.22/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
+| `metadata` _[ObjectMeta](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#objectmeta-v1-meta)_ | Refer to Kubernetes API documentation for fields of `metadata`. |
 | `spec` _[DynamicEnvSpec](#dynamicenvspec)_                                                                         |                                                                 |
 | `status` _[DynamicEnvStatus](#dynamicenvstatus)_                                                                   |                                                                 |
 
@@ -89,15 +89,10 @@ _Appears in:_
 
 - [DynamicEnvSpec](#dynamicenvspec)
 
-| Field                                                                | Description                                                |
-|----------------------------------------------------------------------|------------------------------------------------------------|
-| `headers` _object (keys:string, values:[StringMatch](#stringmatch))_ | Header values are case-sensitive and formatted as follows: |
-
-- `exact: "value"` for exact string match
-- `prefix: "value"` for prefix-based match
-- `regex: "value"` for RE2 style regex-based match (https://github.com/google/re2/wiki/Syntax). |
-  | `sourceLabels` _object (keys:string, values:string)_ | One or more labels that constrain the
-  applicability of a rule to source (client) workloads with the given labels. |
+| Field                                                                | Description                                                                                                                                                                                                                                                    |
+|----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `headers` _object (keys:string, values:[StringMatch](#stringmatch))_ | Header values are case-sensitive and formatted as follows:<br/> - `exact: "value"` for exact string match<br/> - `prefix: "value"` for prefix-based match<br/> - `regex: "value"` for RE2 style regex-based match (https://github.com/google/re2/wiki/Syntax). |
+| `sourceLabels` _object (keys:string, values:string)_                 | One or more labels that constrain the applicability of a rule to source (client) workloads with the given labels.                                                                                                                                              |
 
 #### ResourceStatus
 
@@ -156,7 +151,7 @@ _Appears in:_
 | `containerName` _string_                                                                                    | Container name to override in multiple containers' environment. If not specified we will use the first container.                            |
 | `image` _string_                                                                                            | Docker image name overridden to the desired subset The Docker image found in the original deployment is used if this is not provided.        |
 | `command` _string array_                                                                                    | Entrypoint array overridden to the desired subset The docker image's ENTRYPOINT is used if this is not provided.                             |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.22/#envvar-v1-core) array_ | Additional environment variable to the given deployment                                                                                      |
+| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#envvar-v1-core) array_ | Additional environment variable to the given deployment                                                                                      |
 | `initContainer` _[ContainerOverrides](#containeroverrides)_                                                 | Init container overrides                                                                                                                     |
 | `default-version` _string_                                                                                  | Default version for this subset (if different then the global default version). This is the version that will get the default route.         |
 
