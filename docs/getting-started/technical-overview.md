@@ -75,6 +75,18 @@ attention to the following:
 * If you see the annotation above in your resources (e.g. virtual services - these are not created
   by us but they are updated) you'll know why.
 
+### How virtualServices are handled.
+
+[Virtual services][VS] are not created by the operator. When we identify the service hostname(s) the
+original deployment is connected to, we loop through all the virtual services searching for ones
+that handle our service. If this service is a [delegate][] we are searching in the virtual service
+that this delegate points to. When we finalize the list of affected virtual services, we iterate
+through it's routes and when we identify a route that's related to our service we add an updated
+route (with our matchers) just in front of this route. These routes are also identified by unique
+names so we could identify them easily when deleting the routes.
+
+TO BE CONTINUED...
+
 [istio]: https://istio.io/
 
 [DR]: https://istio.io/latest/docs/reference/config/networking/destination-rule/
