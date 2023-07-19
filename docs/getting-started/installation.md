@@ -48,6 +48,7 @@ More custom settings that could be set:
 
 * [_VersionLabel_](../references/custom-settings.md#versionlabel-and-defaultversion)
 * [_DefaultVersion_](../references/custom-settings.md#versionlabel-and-defaultversion)
+* [_--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
 
 Both settings above could be changed in `config/manager/manager.yaml`:
 
@@ -67,6 +68,9 @@ spec:
           - version <-- this should be replaced for changing the label
           - --default-version
           - shared <-- this should be replaced for changing the default version
+        # uncomment below (and edit to your liking) to specify labels to be removed (comma separated list)
+        #- --remove-labels
+        #- argocd.argoproj.io/instance
 ```
 
 Once all is configured you can deploy the controller using:
