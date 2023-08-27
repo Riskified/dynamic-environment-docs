@@ -18,12 +18,13 @@ _Appears in:_
 
 - [DynamicEnvStatus](#dynamicenvstatus)
 
-| Field                                        | Description                                 |
-|----------------------------------------------|---------------------------------------------|
-| `name` _string_                              | The name of the resource                    |
-| `namespace` _string_                         | The namespace where the resource is created |
-| `status` _LifeCycleStatus_                   | The life cycle status of the resource       |
-| `errors` _[StatusError](#statuserror) array_ | List of errors related to the consumer      |
+| Field                                        | Description                                     |
+|----------------------------------------------|-------------------------------------------------|
+| `name` _string_                              | The name of the resource                        |
+| `namespace` _string_                         | The namespace where the resource is created     |
+| `status` _LifeCycleStatus_                   | The life cycle status of the resource           |
+| `hash` _integer_                             | Hash of the current consumer - for internal use |
+| `errors` _[StatusError](#statuserror) array_ | List of errors related to the consumer          |
 
 #### ContainerOverrides
 
@@ -143,17 +144,15 @@ _Appears in:_
 
 - [DynamicEnvSpec](#dynamicenvspec)
 
-| Field                                                                                                       | Description                                                                                                                                  |
-|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `name` _string_                                                                                             | Deployment name (without namespace)                                                                                                          |
-| `namespace` _string_                                                                                        | Namespace where the deployment is deployed                                                                                                   |
-| `podLabels` _object (keys:string, values:string)_                                                           | Labels to add to the pods of the deployment launched by this subset. Could be used in conjunction with 'SourceLabels' in the `IstioMatches`. |
-| `containerName` _string_                                                                                    | Container name to override in multiple containers' environment. If not specified we will use the first container.                            |
-| `image` _string_                                                                                            | Docker image name overridden to the desired subset The Docker image found in the original deployment is used if this is not provided.        |
-| `command` _string array_                                                                                    | Entrypoint array overridden to the desired subset The docker image's ENTRYPOINT is used if this is not provided.                             |
-| `env` _[EnvVar](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.26/#envvar-v1-core) array_ | Additional environment variable to the given deployment                                                                                      |
-| `initContainer` _[ContainerOverrides](#containeroverrides)_                                                 | Init container overrides                                                                                                                     |
-| `default-version` _string_                                                                                  | Default version for this subset (if different then the global default version). This is the version that will get the default route.         |
+| Field                                                              | Description                                                                                                                                  |
+|--------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `name` _string_                                                    | Deployment name (without namespace)                                                                                                          |
+| `namespace` _string_                                               | Namespace where the deployment is deployed                                                                                                   |
+| `podLabels` _object (keys:string, values:string)_                  | Labels to add to the pods of the deployment launched by this subset. Could be used in conjunction with 'SourceLabels' in the `IstioMatches`. |
+| `replicas` _integer_                                               | Number of deployment replicas. Default is 1. Note: 0 is *invalid*.                                                                           |
+| `containers` _[ContainerOverrides](#containeroverrides) array_     | A list of container overrides (at least one of Containers or InitContainers must not be empty)                                               |
+| `initContainers` _[ContainerOverrides](#containeroverrides) array_ | A list of init container overrides (at least one of Containers or InitContainers must not be empty)                                          |
+| `default-version` _string_                                         | Default version for this subset (if different then the global default version). This is the version that will get the default route.         |
 
 #### SubsetErrors
 
@@ -184,5 +183,6 @@ _Appears in:_
 | `destination-rule` _[ResourceStatus](#resourcestatus)_       | Status of the destination-rule that belongs to the subset |
 | `virtual-services` _[ResourceStatus](#resourcestatus) array_ | Status of the virtual-service that belongs to the subset  |
 | `subset-errors` _[SubsetErrors](#subseterrors)_              | A list of global errors related to subset resources       |
+| `hash` _integer_                                             | Hash of the current subset - for internal use             |
 
 
