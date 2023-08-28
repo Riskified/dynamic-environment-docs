@@ -5,15 +5,8 @@ sidebar_position: 2
 
 # Installation
 
-:::note
-
-Currently _Dynamic Environment_ is distributed in source form. That means you need to compile it
-from code. See the [Repository's Readme](#)
-
-:::
-
-Provided you have your environment setup (per the [Repository's Readme](#)), you can build and
-deploy the controller:
+Provided you have your environment setup (per the [requirements page](requirements.md)), you can
+build and deploy the controller:
 
 ### Build and publish a _Docker_ image of the controller:
 
@@ -83,7 +76,8 @@ make deploy
 
 Helm has a `value.yaml` file (`helm/dynamic-environment/values.yaml`) with values you can override.
 You can check the comments in the file and compare them
-to [custom settings](../references/custom-settings.md) (for more details). Edit to your needs and run (within the `helm` directory):
+to [custom settings](../references/custom-settings.md) (for more details). Edit to your needs and
+run (within the `helm` directory):
 
 ```shell
 # you can edit this command to set values or specify alternative settings file
