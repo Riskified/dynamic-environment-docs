@@ -32,7 +32,8 @@ working kubernetes cluster with required dependencies and _Dynamic Environment_ 
 
 ## Installing the BookInfo Application
 
-Download the [BookInfo manifest](./assets/files/bookinfo.yml) and install it:
+Download the [tutorial files](./assets/files/running-tutorial.zip), extract them, and
+install `bookinfo.yml` manifest:
 
 ```shell
 kubectl apply -f bookinfo.yml
@@ -81,7 +82,7 @@ e.g. `http://localhost:9080/productpage`). You should see something similar to t
 Now that you developed a coloured stars rating element you want to test it before distributing it to
 the world. In our example you updated the `reviews` application and uploaded a docker image to the
 registry. Now let's create a _dynamic environemnt_ manifest to test our application. Here's the
-final manifest (you can download the manifest [here](./assets/files/dynamicenv-bookinfo.yml)):
+final manifest (is is also included in the downloaded `tutorial.zip` archive):
 
 ```yaml title=dynamicenv-bookinfo.yml
 ---

@@ -17,7 +17,7 @@ build and deploy the controller:
 
 * Build and push the image:
 
-      make doccker-build docker-push
+      make docker-build docker-push
 
 ### Deploy using Kustomize
 

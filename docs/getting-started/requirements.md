@@ -4,15 +4,22 @@ sidebar_position: 1
 ---
 
 This operator is currently under heavy development and things are moving fast. Because of that it's
-distributed in source form - that is, you have to download and build the operator from source. below
-are the runtime and build requirements.
+distributed in source form - you have to download and build the operator from source. below are the
+runtime and build requirements.
 
 There are git tags that represent stable_(ish)_ checkpoints so it's possible to track
 changes. Every tag includes a changelog with a list of changes and breaking changes.
 
+:::note
+
+Throughout this tutorial we assume docker, kubernetes, and Istio knowledge (e.g. we do not explain
+docker image names and registry setup).
+
+:::
+
 ### Build Requirements
 
-To setup a build environment follow the requirementsa and instructions in
+To setup a build environment follow the requirements and instructions in
 the [repository's readme](#) file.
 
 ### Runtime Requirements
