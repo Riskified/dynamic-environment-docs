@@ -5,16 +5,17 @@ sidebar_label: 'Technical Overview'
 # Technical Overview
 
 Dynamic Environment uses [_Istio_][istio]'s mesh capabilities to launch custom version of a
-deployment and adds spacial routing based on HTTP request headers or source labels. We achieve this
-by using the following steps:
+deployment and adds spacial routing based on HTTP request headers or source labels.
 
-## Basic Elements
+## Base Elements
+
+We use the following steps to initialize a _DynamicEnvironment_:
 
 ### Subsets
 
-* We identify the deployment based on the _namespace_ / _name_ supplied in the _DynamicEnv_ manifest
-  and then we clone it using the [provided overrides](../references/crd.md#subset) (with minor
-  updates - e.g. set version, etc).
+* We identify the deployment we want to override based on the _namespace_ / _name_ supplied in the
+  _DynamicEnv_ manifest and then we clone it using the [provided
+  overrides](../references/crd.md#subset) (with minor updates - e.g. set version, etc).
 * We are identifying the service that use this deployment (so we'll have the service hostname). A
   deployment might have more than one service pointing to it. We'll soon support this (for now we
   only support single service for deployment).
@@ -26,7 +27,9 @@ by using the following steps:
 
 :::info
 
-We also suppot [Delegate Virtual Service][delegate].
+We also suppot [Delegate Virtual Service][delegate] - these are processed as pointers to the virtual
+service that handles the routing. Note that delegates has various limitations and these limitations
+also apply here.
 
 :::
 
@@ -39,17 +42,90 @@ to update docs (and bullet above) and it's updated!
 
 ### Consumers
 
-Consumers are spacial case of [subsets](#subsets) that doesn't get network in. because of this we
-only clone the deployment like in the subsets but this is as far as we go.
+Consumers are spacial case of [subsets](#subsets) that doesn't get traffic in. It's a convenience
+helper for creating a worker that uses a new version (possibly to connect to new services). Because
+it does not accept traffic we only clone the deployment (same as with subsets) without creating
+_DestinationRule_ and _VirtualService_.
 
 ### Cleanup
 
-When deleting a dynamic environment we delete all the new resources we created and remote the custom
-routes from all the _Virtual Services_ we modified.
+When deleting a dynamic environment we delete all the new resources we created and remove the custom
+routes from all the _Virtual Services_ we modified. This is performed with the help
+of [finalizers][]. The deletion task is performed synchronously - it returns only once everything is
+cleaned up.
+
+:::danger
+
+Since we use finalizers the same limitations as deleting any resource with finalizers apply here
+also.
+
+:::
 
 ### Status Explained
 
-TODO...
+The [status][] is used for both conveying the status of the resource and for internal management of
+resources.
+
+The most important fields for understanding the status of a _DynamicEnv_ resource are:
+
+* `state`: displays the calculated summary of all resources handled by this resource - _running_,
+  _processing_, _degraded_.
+* `totalCount` and `totalReady`: Displays the total number of subsets / consumers in this resource
+  and how many of them are ready.
+
+For troubleshooting you can look deeper into each of the _subsets_ or _consumers_ statuses. Here is
+a (partial) sample of healthy subset (subset names are uniquely generated based on the original
+deployment name and namespace).
+
+```yaml
+subsetsStatus:
+  details-default-dynamicenv-status-updates:
+    deployment:
+      name: details-default-dynamicenv-status-updates
+      namespace: status-updates
+      status: running
+    destinationRule:
+      name: details-default-dynamicenv-status-updates
+      namespace: status-updates
+      status: running
+    virtualServices:
+      - name: details
+        namespace: status-updates
+        status: running
+```
+
+Here is an example of a subset that we could not find any service that serves the deployment we
+override.
+
+```yaml
+      subsetsStatus:
+        details-default-dynamicenv-global-virtual-service-errors:
+          subsetErrors:
+            virtualServices:
+              - error: 'error updating virtual service for subset (details-default-dynamicenv-global-virtual-service-errors):
+                     could not find any service matching host: details'
+                lastOccurrence: "2023-09-01T10:28:20Z"
+```
+
+:::note
+
+Almost all elements in the status can contain a list of errors with the time signature of last
+occurence.
+
+:::
+
+And finally, for a quick status of all deployed _DynamicEnvironment_ resources you can run:
+
+```shell
+HOME ➤ kubectl get de
+NAME                     STATUS   DESIRED   CURRENT   AGE
+dynamicenv-sample        ready    3         3         3h17m
+dynamicenv-simple-test   ready    1         1         12s
+```
+
+You can see that all subsets/consumers of each resource are ready.
+
+The [status][] page contains full details for all fields.
 
 ## SourceLabels Propagation
 
@@ -101,6 +177,13 @@ attention to the following:
 
 ### How virtualServices are handled.
 
+:::warning
+
+This section is just a placeholder. It will be written once we implement support for multiple
+services per service name.
+
+:::
+
 [Virtual services][VS] are not created by the operator. When we identify the service hostname(s) the
 original deployment is connected to, we loop through all the virtual services searching for ones
 that handle our service. If this service is a [delegate][] we are searching in the virtual service
@@ -122,3 +205,7 @@ TO BE CONTINUED...
 [reconcile-loop]: https://sdk.operatorframework.io/docs/building-operators/golang/tutorial/#reconcile-loop
 
 [event-handlers]: https://pkg.go.dev/sigs.k8s.io/controller-runtime/pkg/handler@v0.14.5#EventHandler
+
+[finalizers]: https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/
+
+[status]: ../references/crd.md#dynamicenvstatus
