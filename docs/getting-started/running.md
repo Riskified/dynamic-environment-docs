@@ -16,23 +16,23 @@ ranking element:
 * A coloured stars rating
 
 In the [Istio tutorial](https://istio.io/latest/docs/examples/bookinfo/) you're installing the 3
-versions above and depending on the logged in user you are routed to the configured version for set
-user. This is achieved by the the fact that the logged in user is translated to `end-user` header
-and is matched by _Istio_'s virtual service (familiarity with how _Istio_ works is a requirement to
-use this product). Unlike the _Istio_ tutorial, we will only install a single version (the _black
-stars rating_). In our scenario we are currently developing the coloured stars rating and we want to
-test it before distributing.
+versions mentioned above and depending on the logged in user you are routed to the configured
+version for set user. This is achieved by the the fact that the logged in user is translated to
+`end-user` header and is matched by _Istio_'s virtual service (familiarity with how _Istio_ works is
+a requirement to use this product). Unlike the _Istio_ tutorial, we will only install a single
+version (the _black stars rating_). In our scenario we are currently developing the coloured stars
+rating and we want to test it before distributing.
 
 :::note
 
-Before continuing make sure you followed the previous steps of this tutorial and you now have a
-working kubernetes cluster with required dependencies and _Dynamic Environment_ deployed.
+Before continuing make sure you followed the previous steps of this tutorial and you have a working
+kubernetes cluster with required dependencies and _Dynamic Environment_ deployed.
 
 :::
 
 ## Installing the BookInfo Application
 
-Download the [tutorial files](./assets/files/running-tutorial.zip), extract them, and
+Download the [tutorial files](./assets/files/running-tutorial.zip), extract the archive, and
 install `bookinfo.yml` manifest:
 
 ```shell
@@ -101,6 +101,12 @@ spec:
       image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.2
 ```
 
+:::note
+
+A reference documentation for the `DynamicEnv` CRD can be found [here](../references/crd.md).
+
+:::
+
 A few notes about the manifest:
 
 * Namespace: The _dynamic environment_ custom resource is not restricted to be deployed in the same
@@ -145,10 +151,13 @@ status:
         name: reviews-default-dynamicenv-sample
         namespace: dynenv-tutorial
         status: running
+      hash: [...]
       virtual-services:
       - name: reviews
         namespace: dynenv-tutorial
         status: running
+  totalCount: 1
+  totalReady: 1
 ```
 
 A few things to note about this status:
@@ -160,6 +169,9 @@ A few things to note about this status:
   elements) to restore previous state on deletion.
 * You can also note that for each subset we create a new deployment, a new destination rule and we
   are editing the relevant virtual services.
+* For further details about the status see the [reference](../references/crd.md#dynamicenvstatus)
+  and the corresponding section in
+  the [technical overview](./technical-overview.md#status-explained) document.
 
 Now, let's test our application. Refresh the product page. Nothing should change. Try to login as
 various usernames (no password is needed) and you should still see the black stars rating. However,

@@ -75,11 +75,13 @@ _Appears in:_
 
 - [DynamicEnv](#dynamicenv)
 
-| Field                                                                               | Description |
-|-------------------------------------------------------------------------------------|-------------|
-| `subsets-status` _object (keys:string, values:[SubsetStatus](#subsetstatus))_       |             |
-| `consumers-status` _object (keys:string, values:[ConsumerStatus](#consumerstatus))_ |             |
-| `state` _GlobalReadyStatus_                                                         |             |
+| Field                                                                              | Description                               |
+|------------------------------------------------------------------------------------|-------------------------------------------|
+| `subsetsStatus` _object (keys:string, values:[SubsetStatus](#subsetstatus))_       |                                           |
+| `consumersStatus` _object (keys:string, values:[ConsumerStatus](#consumerstatus))_ |                                           |
+| `state` _GlobalReadyStatus_                                                        |                                           |
+| `totalCount` _integer_                                                             | desired subsets and consumers count       |
+| `totalReady` _integer_                                                             | number of available subsets and consumers |
 
 #### IstioMatch
 
@@ -152,7 +154,7 @@ _Appears in:_
 | `replicas` _integer_                                               | Number of deployment replicas. Default is 1. Note: 0 is *invalid*.                                                                           |
 | `containers` _[ContainerOverrides](#containeroverrides) array_     | A list of container overrides (at least one of Containers or InitContainers must not be empty)                                               |
 | `initContainers` _[ContainerOverrides](#containeroverrides) array_ | A list of init container overrides (at least one of Containers or InitContainers must not be empty)                                          |
-| `default-version` _string_                                         | Default version for this subset (if different then the global default version). This is the version that will get the default route.         |
+| `defaultVersion` _string_                                          | Default version for this subset (if different then the global default version). This is the version that will get the default route.         |
 
 #### SubsetErrors
 
@@ -162,12 +164,12 @@ _Appears in:_
 
 - [SubsetStatus](#subsetstatus)
 
-| Field                                                  | Description                                                       |
-|--------------------------------------------------------|-------------------------------------------------------------------|
-| `deployment` _[StatusError](#statuserror) array_       | Subset's deployment global errors.                                |
-| `destination-rule` _[StatusError](#statuserror) array_ | Subset's destination-rule global errors.                          |
-| `virtual-services` _[StatusError](#statuserror) array_ | Subset's virtual-services global errors.                          |
-| `subset` _[StatusError](#statuserror) array_           | Errors related to subset but not to any of the launched resources |
+| Field                                                 | Description                                                       |
+|-------------------------------------------------------|-------------------------------------------------------------------|
+| `deployment` _[StatusError](#statuserror) array_      | Subset's deployment global errors.                                |
+| `destinationRule` _[StatusError](#statuserror) array_ | Subset's destination-rule global errors.                          |
+| `virtualServices` _[StatusError](#statuserror) array_ | Subset's virtual-services global errors.                          |
+| `subset` _[StatusError](#statuserror) array_          | Errors related to subset but not to any of the launched resources |
 
 #### SubsetStatus
 
@@ -177,12 +179,12 @@ _Appears in:_
 
 - [DynamicEnvStatus](#dynamicenvstatus)
 
-| Field                                                        | Description                                               |
-|--------------------------------------------------------------|-----------------------------------------------------------|
-| `deployment` _[ResourceStatus](#resourcestatus)_             | Status of the deployment that belongs to the subset       |
-| `destination-rule` _[ResourceStatus](#resourcestatus)_       | Status of the destination-rule that belongs to the subset |
-| `virtual-services` _[ResourceStatus](#resourcestatus) array_ | Status of the virtual-service that belongs to the subset  |
-| `subset-errors` _[SubsetErrors](#subseterrors)_              | A list of global errors related to subset resources       |
-| `hash` _integer_                                             | Hash of the current subset - for internal use             |
+| Field                                                       | Description                                               |
+|-------------------------------------------------------------|-----------------------------------------------------------|
+| `deployment` _[ResourceStatus](#resourcestatus)_            | Status of the deployment that belongs to the subset       |
+| `destinationRule` _[ResourceStatus](#resourcestatus)_       | Status of the destination-rule that belongs to the subset |
+| `virtualServices` _[ResourceStatus](#resourcestatus) array_ | Status of the virtual-service that belongs to the subset  |
+| `subsetErrors` _[SubsetErrors](#subseterrors)_              | A list of global errors related to subset resources       |
+| `hash` _integer_                                            | Hash of the current subset - for internal use             |
 
 
