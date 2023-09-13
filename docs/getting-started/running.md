@@ -7,21 +7,8 @@ sidebar_position: 3
 
 In this section of the tutorial we will install a sample application and create a dynamic env to
 test a new version of a single service within the application. The application we'll use is slightly
-modified clone of the _BookInfo_ application that is distributed with _Istio_. If you're not
-familiar with the BookInfo sample application, it's a book into page that contains 3 versions of
-ranking element:
-
-* A text only (we'll not see it here)
-* A black stars rating
-* A coloured stars rating
-
-In the [Istio tutorial](https://istio.io/latest/docs/examples/bookinfo/) you're installing the 3
-versions mentioned above and depending on the logged in user you are routed to the configured
-version for set user. This is achieved by the the fact that the logged in user is translated to
-`end-user` header and is matched by _Istio_'s virtual service (familiarity with how _Istio_ works is
-a requirement to use this product). Unlike the _Istio_ tutorial, we will only install a single
-version (the _black stars rating_). In our scenario we are currently developing the coloured stars
-rating and we want to test it before distributing.
+modified clone of the _BookInfo_ application that is distributed with _Istio_. For more details on
+Istio's bookinfo application check the [application page][bookinfo].
 
 :::note
 
@@ -238,3 +225,4 @@ Let's see some of the changes:
 
 Now delete the dynamic environment and verify that everything is back to normal...
 
+[bookinfo]: https://istio.io/v1.17/docs/examples/bookinfo/

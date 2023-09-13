@@ -8,7 +8,7 @@ sidebar_position: 2
 Provided you have your environment setup (per the [requirements page](requirements.md)), you can
 build and deploy the controller:
 
-### Build and publish a _Docker_ image of the controller:
+### Build and publish a _Docker_ image of the controller
 
 * Edit the project's `Makefile` and set the `IMG` variable to the correct name.
 
