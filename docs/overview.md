@@ -5,10 +5,12 @@ sidebar_position: 1
 
 # Overview
 
-_DynamicEnvironment_ is a kubernetes operator that enables service developers to launch alternative
-versions of selected services while sharing the existing cluster, allowing a faster and cheaper
-environment [^1] for testing and development than starting the entire architecture every time. To
-perform this task, DynamicEnvironment uses the mesh capabilities of [_Istio_][istio].
+DynamicEnv is a Kubernetes operator designed to empower developers by facilitating the creation of
+on-demand environments. It allows developers to seamlessly launch different versions of specific
+services within the same cluster. This approach offers a more efficient and cost-effective solution
+for testing and development compared to the traditional method of spinning up the entire
+architecture for each iteration. DynamicEnv leverages the mesh functionalities provided by
+[_Istio_][istio] to accomplish this task.
 
 Consider the following service description:
 
@@ -42,15 +44,15 @@ spec:
           image: backend-image:test-version
 ```
 
-_DynamicEnvironment_ will launch a parallel backend (called _Tested Version_ in the graph) with the
-version to test and route all traffic with `user` header set to `test-user` to this backend.
+_DynamicEnv_ initiates the deployment of an additional backend (the "Tested Version" in the diagram)
+featuring the version that requires testing. It directs all incoming traffic with a "user" header
+set to "test-user" towards this newly launched backend.
 
-A test client can authenticate as `test-user` and after authentication requests from front-end that
-contains a `user` header with value `front-end` will be routed to the test backend [^2] (while using the
-upstream database).
+To enable testing, a test client can authenticate as `test-user.` Subsequently, requests originating
+from the front-end and containing a `user` header with the value `front-end` will be directed to the
+test backend [^1]. This ensures that requests are routed to the appropriate backend while
+maintaining connectivity with the upstream database.
 
-[^1]: _environemnt_ referring to a stack of selected services in the kubernetes cluster that is
-approachable only through a dedicated entry point
-[^2]: alternatively, send a request directly to the backend with header `user=test-user`.
+[^1]: alternatively, send a request directly to the backend with header `user=test-user`.
 
 [istio]: https://istio.io/
