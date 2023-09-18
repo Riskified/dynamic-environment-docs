@@ -28,7 +28,6 @@ spec:
   istioMatches:
     - headers:
         end-user:
-          prefix: jason
     - sourceLabels:
         end-user: json
   [ ... ]
@@ -191,7 +190,7 @@ the [CRD Subset reference](../references/crd.md#subset).
 Note however that you can not trust this mechanism to carry the source labels through the entire
 services path. Consider the following flow:
 
-![service-with-non-linear-overrides](./assets/img/source-labels.png)
+![service-with-non-linear-overrides](../assets/img/source-labels.png)
 
 If we want to control the routing via source-labels we encounter a problem
 

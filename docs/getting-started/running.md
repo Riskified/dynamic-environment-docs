@@ -19,7 +19,7 @@ kubernetes cluster with required dependencies and _Dynamic Environment_ deployed
 
 ## Installing the BookInfo Application
 
-Download the [tutorial files](./assets/files/running-tutorial.zip), extract the archive, and
+Download the [tutorial files](../assets/files/running-tutorial.zip), extract the archive, and
 install `bookinfo.yml` manifest:
 
 ```shell
@@ -62,7 +62,7 @@ Also note the configured routes within the _reviews_ virtual service (only a sin
 Access the `productpage` service (e.g. by creating a port-forward). Go to the `/productpage` url (
 e.g. `http://localhost:9080/productpage`). You should see something similar to this:
 
-![default view](./assets/img/bookinfo-shared-version.png)
+![default view](../assets/img/bookinfo-shared-version.png)
 
 ## Testing the Coloured Rating using Dynamic Environment
 
@@ -158,13 +158,13 @@ A few things to note about this status:
   are editing the relevant virtual services.
 * For further details about the status see the [reference](../references/crd.md#dynamicenvstatus)
   and the corresponding section in
-  the [technical overview](./technical-overview.md#status-explained) document.
+  the [technical overview](../concepts/technical-overview.md#status-explained) document.
 
 Now, let's test our application. Refresh the product page. Nothing should change. Try to login as
 various usernames (no password is needed) and you should still see the black stars rating. However,
 if you login as user _jason_ you should see something like this (note the coloured ratings):
 
-![alternate version view](./assets/img/bookinfo-alternate-version.png)
+![alternate version view](../assets/img/bookinfo-alternate-version.png)
 
 Let's see some of the changes:
 
