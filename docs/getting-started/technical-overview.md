@@ -11,6 +11,61 @@ deployment and adds spacial routing based on HTTP request headers or source labe
 
 We use the following steps to initialize a _DynamicEnvironment_:
 
+### IstioMatches
+
+IstioMatches corresponds to a small subset of [Istio's HTTPMatchRequest][match] (only _headers_ and
+_source labels_). Currently the _DynamicEnvironment_ IstioMatches is translated to HTTPMatchRequest
+as follows:
+
+* All headers are grouped into a single HTTPMatchRequest
+* All source-labels are grouped into a single HTTPMatchRequest
+
+So if you consider the following IstioMatches object:
+
+```yaml
+[ ... ]
+spec:
+  istioMatches:
+    - headers:
+        end-user:
+          prefix: jason
+    - sourceLabels:
+        end-user: json
+  [ ... ]
+```
+
+Will produce the following _VirtualService_ http matches:
+
+```yaml
+[ ... ]
+spec:
+  http:
+    - match:
+        - headers:
+            end-user:
+              prefix: jason
+      route:
+        - destination:
+            [ ... ]
+    - match:
+        - sourceLabels:
+            end-user: json
+      route:
+        - destination:
+            [ ... ]
+    - route:
+        - destination:
+            [ ... ]
+  [ ... ]
+```
+
+:::note
+
+_DynamicEnvironment_ does not contain provisions to forward headers or source labels. It's the
+responsibility of the tested application to forward headers if required.
+
+:::
+
 ### Subsets
 
 * We identify the deployment we want to override based on the _namespace_ / _name_ supplied in the
@@ -175,7 +230,7 @@ attention to the following:
 * If you see the annotation above in your resources (e.g. virtual services - these are not created
   by us but they are updated) you'll know why.
 
-### How virtualServices are handled.
+### How virtualServices are handled
 
 :::warning
 
@@ -209,3 +264,5 @@ TO BE CONTINUED...
 [finalizers]: https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/
 
 [status]: ../references/crd.md#dynamicenvstatus
+
+[match]: https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPMatchRequest
