@@ -6,23 +6,11 @@ sidebar_position: 2
 # Installation
 
 Provided you have your environment setup (per the [requirements page](requirements.md)), you can
-build and deploy the controller:
-
-### Build and publish a _Docker_ image of the controller
-
-* Edit the project's `Makefile` and set the `IMG` variable to the correct name.
-
-      # For example (around line 50 of the makefile)
-      IMG ?= my-company/dynamicenv:latest
-
-* Build and push the image:
-
-      make docker-build docker-push
+generate manifests and deploy the controller:
 
 ### Deploy using Kustomize
 
-You have to configure the same image as specified in the `Makefile`.
-Edit `$REPOSITORY_ROOT/config/manager/manager.yaml` and set `image` to the value specified above:
+Edit `$REPOSITORY_ROOT/config/manager/manager.yaml` and set `image` to the current version:
 
 ```yaml
 # ...
@@ -34,14 +22,15 @@ spec:
       # ...
       containers:
         # ...
-        image: my-company/dynamicent:latest
+        image: riskified/dynamicenv:TAG
 ```
 
 More custom settings that could be set:
 
 * [_VersionLabel_](../references/custom-settings.md#versionlabel-and-defaultversion)
 * [_DefaultVersion_](../references/custom-settings.md#versionlabel-and-defaultversion)
-* [_--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
+* [
+  _--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
 
 Both settings above could be changed in `config/manager/manager.yaml`:
 
@@ -74,10 +63,22 @@ make deploy
 
 ### Deploy using Helm
 
-Helm has a `value.yaml` file (`helm/dynamic-environment/values.yaml`) with values you can override.
-You can check the comments in the file and compare them
-to [custom settings](../references/custom-settings.md) (for more details). Edit to your needs and
-run (within the `helm` directory):
+Helm has a `value.yaml` file (`helm/dynamic-environment/values.yaml`) with values you should
+override. At the minimum you need to setup the image details correctly:
+
+```yaml title=values.yaml
+[ ... ]
+image:
+  repository: riskified/dynamicenv
+  tag: TAG
+  pullPolicy: IfNotPresent
+  [ ... ]
+```
+
+For further customization you should check the comments in the values file and compare them
+to [custom settings](../references/custom-settings.md) (for more details).
+
+Once you're done editing run (within the `helm` directory):
 
 ```shell
 # you can edit this command to set values or specify alternative settings file

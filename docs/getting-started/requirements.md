@@ -5,12 +5,10 @@ sidebar_position: 1
 
 # Requirements
 
-This operator is currently under heavy development and things are moving fast. Because of that it's
-distributed in source form - you have to download and build the operator from source. below are the
-runtime and build requirements.
-
-There are git tags that represent stable_(ish)_ checkpoints so it's possible to track
-changes. Every tag includes a changelog with a list of changes and breaking changes.
+_DynamicEnvironment_ is distributed as a docker image. Since we're under heavy development make sure
+you read the [release notes][releases] of the version you're installing to make sure there are no
+extra requirements. Currently, you will also need the source code for generating the manifests /
+helm charts.
 
 :::note
 
@@ -19,13 +17,24 @@ docker image names and registry setup).
 
 :::
 
+:::warning
+
+If you're upgrading your version of _DynamicEnvironment_ make sure you read all
+the [release notes][releases] up to the version you're updating to - there could be breaking
+changes.
+
+:::
+
 ### Build Requirements
 
-To setup a build environment follow the requirements and instructions in
-the [repository's readme](#) file.
+As mentioned above you'll need the source code to generate the required deployment manifests. To set
+up a build environment follow the requirements and instructions in the [repository's readme](#)
+file (obviously, make sure you check out the tag corresponding to the version you're deploying).
 
 ### Runtime Requirements
 
 This controller requires recent versions of both _Kubernetes_ and _Istio_ to run. Check the [
 _Supported Versions_](../supported-versions.md) for tested versions. Note that other versions may
 also work but requires testing.
+
+[releases]: #
