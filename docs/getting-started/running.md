@@ -158,7 +158,7 @@ A few things to note about this status:
   are editing the relevant virtual services.
 * For further details about the status see the [reference](../references/crd.md#dynamicenvstatus)
   and the corresponding section in
-  the [technical overview](../concepts/technical-overview.md#status-explained) document.
+  the [technical overview](../advanced/technical-overview.md#status-explained) document.
 
 Now, let's test our application. Refresh the product page. Nothing should change. Try to login as
 various usernames (no password is needed) and you should still see the black stars rating. However,

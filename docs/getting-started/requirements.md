@@ -34,7 +34,7 @@ file (obviously, make sure you check out the tag corresponding to the version yo
 ### Runtime Requirements
 
 This controller requires recent versions of both _Kubernetes_ and _Istio_ to run. Check the [
-_Supported Versions_](../supported-versions.md) for tested versions. Note that other versions may
+_Supported Versions_](../references/supported-versions.md) for tested versions. Note that other versions may
 also work but requires testing.
 
 [releases]: #
