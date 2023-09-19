@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Running'
+sidebar_label: 'Running Sample'
 sidebar_position: 3
 ---
 
