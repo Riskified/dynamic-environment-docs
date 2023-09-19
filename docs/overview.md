@@ -49,10 +49,10 @@ _DynamicEnv_ initiates the deployment of an additional backend (the "Tested Vers
 featuring the version that requires testing. It directs all incoming traffic with a "user" header
 set to "test-user" towards this newly launched backend.
 
-To enable testing, a test client can authenticate as `test-user.` Subsequently, requests originating
-from the front-end and containing a `user` header with the value `front-end` will be directed to the
-test backend [^1]. This ensures that requests are routed to the appropriate backend while
-maintaining connectivity with the upstream database.
+To enable testing, a test client can add a `user=test-user` header. If the front-end forwards this
+header to the backend (note, this is the responsibility of the app, not the operator) the request
+will be directed to the test backend [^1]. This ensures that requests are routed to the appropriate
+backend while maintaining connectivity with the upstream database.
 
 [^1]: alternatively, send a request directly to the backend with header `user=test-user`.
 
