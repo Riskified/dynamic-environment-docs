@@ -1,5 +1,5 @@
 ---
-sidebar_label: 'Running'
+sidebar_label: 'Running Sample'
 sidebar_position: 3
 ---
 
@@ -7,32 +7,20 @@ sidebar_position: 3
 
 In this section of the tutorial we will install a sample application and create a dynamic env to
 test a new version of a single service within the application. The application we'll use is slightly
-modified clone of the _BookInfo_ application that is distributed with _Istio_. If you're not
-familiar with the BookInfo sample application, it's a book into page that contains 3 versions of
-ranking element:
-
-* A text only (we'll not see it here)
-* A black stars rating
-* A coloured stars rating
-
-In the [Istio tutorial](https://istio.io/latest/docs/examples/bookinfo/) you're installing the 3
-versions above and depending on the logged in user you are routed to the configured version for set
-user. This is achieved by the the fact that the logged in user is translated to `end-user` header
-and is matched by _Istio_'s virtual service (familiarity with how _Istio_ works is a requirement to
-use this product). Unlike the _Istio_ tutorial, we will only install a single version (the _black
-stars rating_). In our scenario we are currently developing the coloured stars rating and we want to
-test it before distributing.
+modified clone of the _BookInfo_ application that is distributed with _Istio_. For more details on
+Istio's bookinfo application check the [application page][bookinfo].
 
 :::note
 
-Before continuing make sure you followed the previous steps of this tutorial and you now have a
-working kubernetes cluster with required dependencies and _Dynamic Environment_ deployed.
+Before continuing make sure you followed the previous steps of this tutorial and you have a working
+kubernetes cluster with required dependencies and _Dynamic Environment_ deployed.
 
 :::
 
 ## Installing the BookInfo Application
 
-Download the [BookInfo manifest](./assets/files/bookinfo.yml) and install it:
+Download the [tutorial files](../assets/files/running-tutorial.zip), extract the archive, and
+install `bookinfo.yml` manifest:
 
 ```shell
 kubectl apply -f bookinfo.yml
@@ -74,14 +62,14 @@ Also note the configured routes within the _reviews_ virtual service (only a sin
 Access the `productpage` service (e.g. by creating a port-forward). Go to the `/productpage` url (
 e.g. `http://localhost:9080/productpage`). You should see something similar to this:
 
-![default view](./assets/img/bookinfo-shared-version.png)
+![default view](../assets/img/bookinfo-shared-version.png)
 
 ## Testing the Coloured Rating using Dynamic Environment
 
 Now that you developed a coloured stars rating element you want to test it before distributing it to
 the world. In our example you updated the `reviews` application and uploaded a docker image to the
 registry. Now let's create a _dynamic environemnt_ manifest to test our application. Here's the
-final manifest (you can download the manifest [here](./assets/files/dynamicenv-bookinfo.yml)):
+final manifest (is is also included in the downloaded `tutorial.zip` archive):
 
 ```yaml title=dynamicenv-bookinfo.yml
 ---
@@ -99,6 +87,12 @@ spec:
       namespace: dynenv-tutorial
       image: docker.io/istio/examples-bookinfo-reviews-v3:1.16.2
 ```
+
+:::note
+
+A reference documentation for the `DynamicEnv` CRD can be found [here](../references/crd.md).
+
+:::
 
 A few notes about the manifest:
 
@@ -144,10 +138,13 @@ status:
         name: reviews-default-dynamicenv-sample
         namespace: dynenv-tutorial
         status: running
+      hash: [...]
       virtual-services:
       - name: reviews
         namespace: dynenv-tutorial
         status: running
+  totalCount: 1
+  totalReady: 1
 ```
 
 A few things to note about this status:
@@ -159,12 +156,15 @@ A few things to note about this status:
   elements) to restore previous state on deletion.
 * You can also note that for each subset we create a new deployment, a new destination rule and we
   are editing the relevant virtual services.
+* For further details about the status see the [reference](../references/crd.md#dynamicenvstatus)
+  and the corresponding section in
+  the [technical overview](../advanced/technical-overview.md#status-explained) document.
 
 Now, let's test our application. Refresh the product page. Nothing should change. Try to login as
 various usernames (no password is needed) and you should still see the black stars rating. However,
 if you login as user _jason_ you should see something like this (note the coloured ratings):
 
-![alternate version view](./assets/img/bookinfo-alternate-version.png)
+![alternate version view](../assets/img/bookinfo-alternate-version.png)
 
 Let's see some of the changes:
 
@@ -225,3 +225,4 @@ Let's see some of the changes:
 
 Now delete the dynamic environment and verify that everything is back to normal...
 
+[bookinfo]: https://istio.io/v1.17/docs/examples/bookinfo/

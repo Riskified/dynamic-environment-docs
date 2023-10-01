@@ -19,7 +19,7 @@ two settings:
   only be set globally.
 * _DefaultVersion_ - The value of the _VersionLabel_ that identify the **default version** (
   default: `shared`). This setting could be set per subset (e.g, when you don't have a global
-  default version) - see `default-version` in [subset](./crd.md#subset).
+  default version) - see `defaultVersion` in [subset](./crd.md#subset).
 
 ### Labels to Remove (when creating overriding deployments)
 

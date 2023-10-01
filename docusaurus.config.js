@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Dynamic Environment',
   tagline: 'Dynamic Environment for testing Kubernetes Services',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/de-logo.svg',
 
   // Set the production url of your site here
   url: 'https://your-docusaurus-test-site.com',
@@ -38,19 +38,14 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
-        },
+        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -72,7 +67,7 @@ const config = {
         title: 'Dynamic Environment',
         logo: {
           alt: 'DynamicEnvironment Logo',
-          src: 'img/logo.svg',
+          src: 'img/de-logo.svg',
         },
         items: [
           {
