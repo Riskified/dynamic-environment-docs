@@ -179,12 +179,12 @@ _Appears in:_
 
 - [DynamicEnvStatus](#dynamicenvstatus)
 
-| Field                                                       | Description                                               |
-|-------------------------------------------------------------|-----------------------------------------------------------|
-| `deployment` _[ResourceStatus](#resourcestatus)_            | Status of the deployment that belongs to the subset       |
-| `destinationRule` _[ResourceStatus](#resourcestatus)_       | Status of the destination-rule that belongs to the subset |
-| `virtualServices` _[ResourceStatus](#resourcestatus) array_ | Status of the virtual-service that belongs to the subset  |
-| `subsetErrors` _[SubsetErrors](#subseterrors)_              | A list of global errors related to subset resources       |
-| `hash` _integer_                                            | Hash of the current subset - for internal use             |
+| Field                                                        | Description                                               |
+|--------------------------------------------------------------|-----------------------------------------------------------|
+| `deployment` _[ResourceStatus](#resourcestatus)_             | Status of the deployment that belongs to the subset       |
+| `destinationRules` _[ResourceStatus](#resourcestatus) array_ | Status of the destination-rule that belongs to the subset |
+| `virtualServices` _[ResourceStatus](#resourcestatus) array_  | Status of the virtual-service that belongs to the subset  |
+| `subsetErrors` _[SubsetErrors](#subseterrors)_               | A list of global errors related to subset resources       |
+| `hash` _integer_                                             | Hash of the current subset - for internal use             |
 
 
