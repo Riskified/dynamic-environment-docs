@@ -70,11 +70,10 @@ responsibility of the tested application to forward headers if required.
 * We identify the deployment we want to override based on the _namespace_ / _name_ supplied in the
   _DynamicEnv_ manifest and then we clone it using the [provided
   overrides](../references/crd.md#subset) (with minor updates - e.g. set version, etc).
-* We are identifying the service that use this deployment (so we'll have the service hostname). A
-  deployment might have more than one service pointing to it. We'll soon support this (for now we
-  only support single service for deployment).
-* We identify the [_Destination Rule_][DR] that handles this service hostname (see previous bullet)
-  for the default version and we clone it for this custom version.
+* We identify the services that use this deployment so we'll have a list of hostnames that points to
+  set deployment (there could be more then a single service).
+* For each of the hostnames (see above) we identify the [_Destination Rule_][DR] that handles the
+  default version and we clone it using the custom version.
 * We scroll through all the [Virtual Services][VS] in the namespace and identify the ones that use
   the default destination rule. We then create custom routes in each of the virtual service that
   points to the new service using the provided [IstioMatch](../references/crd.md#istiomatch).
@@ -84,13 +83,6 @@ responsibility of the tested application to forward headers if required.
 We also suppot [Delegate Virtual Service][delegate] - these are processed as pointers to the virtual
 service that handles the routing. Note that delegates has various limitations and these limitations
 also apply here.
-
-:::
-
-:::caution
-
-Currently we only support a single service for each deployment. This will be changed soon. Remember
-to update docs (and bullet above) and it's updated!
 
 :::
 
@@ -108,7 +100,7 @@ routes from all the _Virtual Services_ we modified. This is performed with the h
 of [finalizers][]. The deletion task is performed synchronously - it returns only once everything is
 cleaned up.
 
-:::danger
+:::note
 
 Since we use finalizers the same limitations as deleting any resource with finalizers apply here
 also.
@@ -139,34 +131,86 @@ subsetsStatus:
       namespace: status-updates
       status: running
     destinationRule:
-      name: details-default-dynamicenv-status-updates
-      namespace: status-updates
-      status: running
+      - name: details-default-dynamicenv-status-updates
+        namespace: status-updates
+        status: running
     virtualServices:
       - name: details
         namespace: status-updates
         status: running
 ```
 
-Here is an example of a subset that we could not find any service that serves the deployment we
-override.
+:::info
 
-```yaml
-      subsetsStatus:
-        details-default-dynamicenv-global-virtual-service-errors:
-          subsetErrors:
-            virtualServices:
-              - error: 'error updating virtual service for subset (details-default-dynamicenv-global-virtual-service-errors):
-                     could not find any service matching host: details'
-                lastOccurrence: "2023-09-01T10:28:20Z"
-```
-
-:::note
-
-Almost all elements in the status can contain a list of errors with the time signature of last
-occurence.
+For deployment with multiple hostnames (more than a single service that points to set deployment)
+there could be a situation that specific hostname does not have an active _DestinationRule_ or
+_VirtualService_. We do not treat this as error as long as the service is accessible from at least
+single hostname.
 
 :::
+
+Here is an example of a subset where one of the hostname's _DestinationRule_ is missing. Note
+the `ignored-missing-destination-rule` status on one of the _DestinatoinRule_'s status fields (The state is
+still `running` because one hostname - `details` - is accessible):
+
+```yaml
+[...]
+status:
+  state: ready
+  subsetsStatus:
+    details-default-dynamicenv-multiple-services-per-deploym:
+      deployment:
+        name: details-default-dynamicenv-multiple-services-per-deploym
+        namespace: multiple-services-per-deployment
+        status: running
+      destinationRules:
+        - name: details-default-dynamicenv-multiple-services-per-deploym-details
+          namespace: multiple-services-per-deployment
+          status: running
+        - name: details-default-dynamicenv-multiple-services-per-deploym-details-alt
+          namespace: multiple-services-per-deployment
+          status: ignored-missing-destination-rule
+      virtualServices:
+        - name: details
+          namespace: multiple-services-per-deployment
+          status: running
+  totalCount: 1
+  totalReady: 1
+```
+
+This next example is of a subset that has two services but there is a missing _DestinationRule_ on
+one of the hostnames and a missing _VirtualService_ on the other hostname. This causes the subset to
+be identified as `degraded` (note the error in the `subsetErrors` section and
+the `ignored-missing-destination-rule` status on one of the destination rules):
+
+```yaml
+[ ... ]
+status:
+  state: degraded
+  subsetsStatus:
+    details-default-dynamicenv-multiple-services-scenarios-n:
+      deployment:
+        name: details-default-dynamicenv-multiple-services-scenarios-n
+        namespace: multiple-services-scenarios-no-working-single-host
+        status: running
+      destinationRules:
+        - name: details-default-dynamicenv-multiple-services-scenarios-n-details
+          namespace: multiple-services-scenarios-no-working-single-host
+          status: ignored-missing-destination-rule
+        - name: details-default-dynamicenv-multiple-services-scenarios-n-details-alt
+          namespace: multiple-services-scenarios-no-working-single-host
+          status: running
+      subsetErrors:
+        subset:
+          - error: Couldn't find common active service hostname across DestinationRules
+              and VirtualServices
+      virtualServices:
+        - name: details
+          namespace: multiple-services-scenarios-no-working-single-host
+          status: running
+  totalCount: 1
+  totalReady: 0
+```
 
 And finally, for a quick status of all deployed _DynamicEnvironment_ resources you can run:
 
