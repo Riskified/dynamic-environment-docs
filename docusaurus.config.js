@@ -89,12 +89,7 @@ const config = {
         links: [
           {
             title: 'Docs',
-            items: [
-              {
-                label: 'Documentation',
-                to: '/docs/overview',
-              },
-            ],
+            items: [],
           },
           {
             title: 'Community',

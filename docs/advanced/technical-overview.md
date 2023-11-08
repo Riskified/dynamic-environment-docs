@@ -11,6 +11,14 @@ deployment and adds spacial routing based on HTTP request headers or source labe
 
 We use the following steps to initialize a _DynamicEnvironment_:
 
+### Terminology
+
+Outside of the basic elements specified below, here are some other terms that we use throughout this
+section (to avoid confusion):
+
+* _service-host_ - this is the hostname (short or fully qualified) that we use to access a service.
+* _DynamicEnv_ - this is the type (_Kind_) of the custom resource.
+
 ### IstioMatches
 
 IstioMatches corresponds to a small subset of [Istio's HTTPMatchRequest][match] (only _headers_ and
@@ -67,23 +75,20 @@ responsibility of the tested application to forward headers if required.
 
 ### Subsets
 
+Subsets are named after _Istio_'s subsets but they are not identical, they are just similar
+concept (a subset of service endpoints that corresponds to specific custom version).
+
 * We identify the deployment we want to override based on the _namespace_ / _name_ supplied in the
   _DynamicEnv_ manifest and then we clone it using the [provided
   overrides](../references/crd.md#subset) (with minor updates - e.g. set version, etc).
-* We identify the services that use this deployment so we'll have a list of hostnames that points to
-  set deployment (there could be more then a single service).
-* For each of the hostnames (see above) we identify the [_Destination Rule_][DR] that handles the
-  default version and we clone it using the custom version.
-* We scroll through all the [Virtual Services][VS] in the namespace and identify the ones that use
-  the default destination rule. We then create custom routes in each of the virtual service that
-  points to the new service using the provided [IstioMatch](../references/crd.md#istiomatch).
+* We identify the services that use this deployment so we'll have a list of service-hosts that points to set deployment (there could be more then a single service).
+* For each of the serice-hosts we identify the [_Destination Rule_][DR] that handles the default version and we clone it using the custom version.
+* The handling of virtual services is described in [this section](#how-virtualservices-are-handled).
 
-:::info
+:::warning
 
-We also suppot [Delegate Virtual Service][delegate] - these are processed as pointers to the virtual
-service that handles the routing. Note that delegates has various limitations and these limitations
-also apply here.
-
+Make sure you read the [virtual services](#how-virtualservices-are-handled) section below. It holds
+important information regarding out handling of virtual services including limitations.
 :::
 
 ### Consumers
@@ -142,19 +147,14 @@ subsetsStatus:
 
 :::info
 
-For deployment with multiple hostnames (more than a single service that points to set deployment)
-there could be a situation that specific hostname does not have an active _DestinationRule_ or
-_VirtualService_. We do not treat this as error as long as the service is accessible from at least
-single hostname.
+For deployment with multiple service-hosts (more than a single service that points to set deployment) there could be a situation that specific service-host does not have an active _DestinationRule_ or _VirtualService_. We do not treat this as error as long as the service is accessible from at least single service-host.
 
 :::
 
-Here is an example of a subset where one of the hostname's _DestinationRule_ is missing. Note
-the `ignored-missing-destination-rule` status on one of the _DestinatoinRule_'s status fields (The state is
-still `running` because one hostname - `details` - is accessible):
+Here is an example of a subset where one of the service-host's _DestinationRule_ is missing. Note the `ignored-missing-destination-rule` status on one of the _DestinatoinRule_'s status fields (The state is still `running` because one service-host - `details` - is accessible):
 
 ```yaml
-[...]
+[ ... ]
 status:
   state: ready
   subsetsStatus:
@@ -178,10 +178,7 @@ status:
   totalReady: 1
 ```
 
-This next example is of a subset that has two services but there is a missing _DestinationRule_ on
-one of the hostnames and a missing _VirtualService_ on the other hostname. This causes the subset to
-be identified as `degraded` (note the error in the `subsetErrors` section and
-the `ignored-missing-destination-rule` status on one of the destination rules):
+This next example is of a subset that has two services but there is a missing _DestinationRule_ on one of the service-hosts and a missing _VirtualService_ on the other service-host. This causes the subset to be identified as `degraded` (note the error in the `subsetErrors` section and the `ignored-missing-destination-rule` status on one of the destination rules):
 
 ```yaml
 [ ... ]
@@ -229,7 +226,7 @@ The [status][] page contains full details for all fields.
 
 ### Getting notified about modifications in resources we control
 
-When we create a new _Dynamic Environment_ custom resource it triggers
+When we create a new _DynamicEnv_ custom resource it triggers
 a [reconcile loop][reconcile-loop]. Every time there's an event related to this specific manifest
 the reconcile loop is triggered. This means that every time we update the manifest the reconcile
 loop will run. However, this is not the only event that triggers the loop. We create and modify
@@ -251,22 +248,25 @@ attention to the following:
 
 ### How virtualServices are handled
 
+Unlike the other resources we are handling, [Virtual services][VS] are not created by the operator.
+When we identify the service-hosts that points to the
+deployment specified in the _DynamicEnvironment_'s subset we loop through all the virtual services
+searching for ones that handles these service-hosts. We also handle [delegates][delegate]. Once
+identified we manipulate each of these virtual services to contain http routes that corresponds to
+our custom version. We also add annotation to set virtual service to get notification whenever this
+virtual service updates.
+
 :::warning
 
-This section is just a placeholder. It will be written once we implement support for multiple
-services per service name.
+Note, currently we have a limitation that we do not support virtual services that handles more than
+one service-host from the list of identified service-hosts. If for example our deployment can be
+accessed by both `myservice` and `myservice-metrics` and there is a single _VirtualService_ that
+handle both of these service-hosts we would only add route for the service-host that was processed
+first and ignore the second.
 
 :::
 
-[Virtual services][VS] are not created by the operator. When we identify the service hostname(s) the
-original deployment is connected to, we loop through all the virtual services searching for ones
-that handle our service. If this service is a [delegate][] we are searching in the virtual service
-that this delegate points to. When we finalize the list of affected virtual services, we iterate
-through it's routes and when we identify a route that's related to our service we add an updated
-route (with our matchers) just in front of this route. These routes are also identified by unique
-names so we could identify them easily when deleting the routes.
-
-TO BE CONTINUED...
+Upon deletion of the _DynamicEnvironment_ we also clean our routes from all the virtual services.
 
 [istio]: https://istio.io/
 
