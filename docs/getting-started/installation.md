@@ -5,12 +5,11 @@ sidebar_position: 2
 
 # Installation
 
-Provided you have your environment setup (per the [requirements page](requirements.md)), you can
-generate manifests and deploy the controller:
+Assuming you've successfully set up your environment, following the guidelines provided on the [requirements page](requirements.md), you can proceed to generate manifests and deploy the controller:
 
-### Deploy using Kustomize
+### Deployment via Kustomize
 
-Edit `$REPOSITORY_ROOT/config/manager/manager.yaml` and set `image` to the current version:
+1. Edit the `$REPOSITORY_ROOT/config/manager/manager.yaml` file and set the `image` field to the current version:
 
 ```yaml
 # ...
@@ -25,14 +24,14 @@ spec:
         image: riskified/dynamicenv:TAG
 ```
 
-More custom settings that could be set:
+You can further customize the deployment by adjusting the following settings:
 
 * [_VersionLabel_](../references/custom-settings.md#versionlabel-and-defaultversion)
 * [_DefaultVersion_](../references/custom-settings.md#versionlabel-and-defaultversion)
 * [
   _--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
 
-Both settings above could be changed in `config/manager/manager.yaml`:
+These settings can be changed in the `config/manager/manager.yaml` file:
 
 ```yaml
 # ...
@@ -47,24 +46,23 @@ spec:
         args:
           - --leader-elect
           - --version-label
-          - version <-- this should be replaced for changing the label
+          - version <-- this should be replaced to change the label
           - --default-version
-          - shared <-- this should be replaced for changing the default version
-        # uncomment below (and edit to your liking) to specify labels to be removed (comma separated list)
+          - shared <-- this should be replaced to change the default version
+        # Uncomment the lines below (and modify as needed) to specify labels to be removed (comma-separated list)
         #- --remove-labels
         #- argocd.argoproj.io/instance
 ```
 
-Once all is configured you can deploy the controller using:
+Once you have configured everything, deploy the controller using the following command:
 
 ```shell
 make deploy
 ```
 
-### Deploy using Helm
+### Deploy via Helm
 
-Helm has a `value.yaml` file (`helm/dynamic-environment/values.yaml`) with values you should
-override. At the minimum you need to setup the image details correctly:
+Helm provides a `values.yaml` file (`helm/dynamic-environment/values.yaml`) with predefined values that you can override. At the very least, ensure you correctly set up the image details:
 
 ```yaml title=values.yaml
 [ ... ]
@@ -75,10 +73,9 @@ image:
   [ ... ]
 ```
 
-For further customization you should check the comments in the values file and compare them
-to [custom settings](../references/custom-settings.md) (for more details).
+For more extensive customization, refer to the comments in the values file and compare them to the [custom settings](../references/custom-settings.md) for in-depth details.
 
-Once you're done editing run (within the `helm` directory):
+Once you've finished making your edits, execute the following command (from within the `helm` directory):
 
 ```shell
 # you can edit this command to set values or specify alternative settings file

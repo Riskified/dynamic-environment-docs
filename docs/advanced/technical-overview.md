@@ -4,31 +4,27 @@ sidebar_label: 'Technical Overview'
 
 # Technical Overview
 
-Dynamic Environment uses [_Istio_][istio]'s mesh capabilities to launch custom version of a
-deployment and adds spacial routing based on HTTP request headers or source labels.
+Dynamic Environment leverages [_Istio_][istio]'s mesh capabilities to launch custom versions of deployments and adds special routing based on HTTP request headers or source labels.
 
 ## Base Elements
 
-We use the following steps to initialize a _DynamicEnvironment_:
+We use the following steps to set up a _DynamicEnvironment_:
 
 ### Terminology
 
-Outside of the basic elements specified below, here are some other terms that we use throughout this
-section (to avoid confusion):
+In addition to the fundamental elements described below, here are some key terms used throughout this section to prevent confusion:
 
-* _service-host_ - this is the hostname (short or fully qualified) that we use to access a service.
-* _DynamicEnv_ - this is the type (_Kind_) of the custom resource.
+* _service-host_: This is the hostname (short or fully qualified) used to access a service.
+* _DynamicEnv_: This is the type (_Kind_) of the custom resource.
 
 ### IstioMatches
 
-IstioMatches corresponds to a small subset of [Istio's HTTPMatchRequest][match] (only _headers_ and
-_source labels_). Currently the _DynamicEnvironment_ IstioMatches is translated to HTTPMatchRequest
-as follows:
+IstioMatches corresponds to a subset of [Istio's HTTPMatchRequest][match] (specifically _headers_ and _source labels_). Currently, _DynamicEnvironment_ IstioMatches are translated to HTTPMatchRequest as follows:
 
-* All headers are grouped into a single HTTPMatchRequest
-* All source-labels are grouped into a single HTTPMatchRequest
+* All headers are grouped into a single HTTPMatchRequest.
+* All source labels are grouped into a single HTTPMatchRequest.
 
-So if you consider the following IstioMatches object:
+So, if you have the following IstioMatches object:
 
 ```yaml
 [ ... ]
@@ -41,7 +37,7 @@ spec:
   [ ... ]
 ```
 
-Will produce the following _VirtualService_ http matches:
+This will produce the following VirtualService HTTP matches:
 
 ```yaml
 [ ... ]
@@ -68,65 +64,49 @@ spec:
 
 :::note
 
-_DynamicEnvironment_ does not contain provisions to forward headers or source labels. It's the
-responsibility of the tested application to forward headers if required.
+_DynamicEnvironment_ does not provide provisions to forward headers or source labels. It's the tested application's responsibility to forward headers if needed.
 
 :::
 
 ### Subsets
 
-Subsets are named after _Istio_'s subsets but they are not identical, they are just similar
-concept (a subset of service endpoints that corresponds to specific custom version).
+Subsets are named after Istio's subsets, but they are not identical; they are conceptually similar (representing a subset of service endpoints corresponding to a specific custom version).
 
-* We identify the deployment we want to override based on the _namespace_ / _name_ supplied in the
-  _DynamicEnv_ manifest and then we clone it using the [provided
-  overrides](../references/crd.md#subset) (with minor updates - e.g. set version, etc).
-* We identify the services that use this deployment so we'll have a list of service-hosts that points to set deployment (there could be more then a single service).
-* For each of the serice-hosts we identify the [_Destination Rule_][DR] that handles the default version and we clone it using the custom version.
-* The handling of virtual services is described in [this section](#how-virtualservices-are-handled).
+* We identify the deployment we want to override based on the _namespace_ / _name_ provided in the _DynamicEnv_ manifest. We then clone it using the [provided
+  overrides](../references/crd.md#subset) (with minor updates, e.g., setting the version).
+* We identify the services that use this deployment, so we have a list of service-hosts that point to the said deployment (there could be more than a single service).
+* For each of the service-hosts, we identify the [_Destination Rule_][DR] that handles the default version. We clone it using the custom version.
+* The handling of virtual services is explained in [this section](#how-virtualservices-are-handled).
 
 :::warning
 
-Make sure you read the [virtual services](#how-virtualservices-are-handled) section below. It holds
-important information regarding out handling of virtual services including limitations.
+Be sure to read the [virtual services](#how-virtualservices-are-handled) section below. It contains important information regarding our handling of virtual services, including limitations.
 :::
 
 ### Consumers
 
-Consumers are spacial case of [subsets](#subsets) that doesn't get traffic in. It's a convenience
-helper for creating a worker that uses a new version (possibly to connect to new services). Because
-it does not accept traffic we only clone the deployment (same as with subsets) without creating
-_DestinationRule_ and _VirtualService_.
+Consumers are a special case of [subsets](#subsets) that do not receive traffic. They are a convenient tool for creating a worker that uses a new version, possibly to connect to new services. Since they do not accept traffic, we only clone the deployment (similar to subsets) without creating a _DestinationRule_ and _VirtualService_.
 
 ### Cleanup
 
-When deleting a dynamic environment we delete all the new resources we created and remove the custom
-routes from all the _Virtual Services_ we modified. This is performed with the help
-of [finalizers][]. The deletion task is performed synchronously - it returns only once everything is
-cleaned up.
+When deleting a dynamic environment, we remove all the new resources we created and eliminate the custom routes from all the Virtual Services we modified. This is done with the help of [finalizers][]. The deletion task is synchronous and returns only after everything is cleaned up.
 
 :::note
 
-Since we use finalizers the same limitations as deleting any resource with finalizers apply here
-also.
+Since we use finalizers, the same limitations that apply to deleting any resource with finalizers also apply here.
 
 :::
 
 ### Status Explained
 
-The [status][] is used for both conveying the status of the resource and for internal management of
-resources.
+The [status][] is used for both conveying the status of the resource and for the internal management of resources.
 
-The most important fields for understanding the status of a _DynamicEnv_ resource are:
+The most significant fields for understanding the status of a _DynamicEnv_ resource are:
 
-* `state`: displays the calculated summary of all resources handled by this resource - _running_,
-  _processing_, _degraded_.
-* `totalCount` and `totalReady`: Displays the total number of subsets / consumers in this resource
-  and how many of them are ready.
+* `state`: This field shows the calculated summary of all resources managed by this resource, such as running, processing, or degraded.
+* `totalCount` and `totalReady`: These fields display the total number of subsets / consumers in this resource and how many of them are ready.
 
-For troubleshooting you can look deeper into each of the _subsets_ or _consumers_ statuses. Here is
-a (partial) sample of healthy subset (subset names are uniquely generated based on the original
-deployment name and namespace).
+For troubleshooting, you can delve deeper into each of the _subsets_ or _consumers_ statuses. Here is a partial example of a healthy subset (subset names are uniquely generated based on the original deployment name and namespace):
 
 ```yaml
 subsetsStatus:
@@ -147,11 +127,11 @@ subsetsStatus:
 
 :::info
 
-For deployment with multiple service-hosts (more than a single service that points to set deployment) there could be a situation that specific service-host does not have an active _DestinationRule_ or _VirtualService_. We do not treat this as error as long as the service is accessible from at least single service-host.
+For deployments with multiple service-hosts (more than a single service pointing to a set deployment), there could be a situation where a specific service-host does not have an active _DestinationRule_ or _VirtualService_. We do not treat this as an error as long as the service is accessible from at least one service-host.
 
 :::
 
-Here is an example of a subset where one of the service-host's _DestinationRule_ is missing. Note the `ignored-missing-destination-rule` status on one of the _DestinatoinRule_'s status fields (The state is still `running` because one service-host - `details` - is accessible):
+The following example shows a subset in which one of the service-host's _DestinationRule_ is missing. Note the `ignored-missing-destination-rule` status on one of the _DestinationRule_'s status fields (The state is still `running` because one service-host - `details` - is accessible):
 
 ```yaml
 [ ... ]
@@ -178,7 +158,7 @@ status:
   totalReady: 1
 ```
 
-This next example is of a subset that has two services but there is a missing _DestinationRule_ on one of the service-hosts and a missing _VirtualService_ on the other service-host. This causes the subset to be identified as `degraded` (note the error in the `subsetErrors` section and the `ignored-missing-destination-rule` status on one of the destination rules):
+The next example shows a subset that has two services. One has a missing _DestinationRule_, and the other has a missing _VirtualService_. This causes the subset to be identified as `degraded` (note the error in the `subsetErrors` section and the `ignored-missing-destination-rule` status on one of the destination rules):
 
 ```yaml
 [ ... ]
@@ -209,7 +189,7 @@ status:
   totalReady: 0
 ```
 
-And finally, for a quick status of all deployed _DynamicEnvironment_ resources you can run:
+To get a quick status overview of all deployed _DynamicEnvironment_ resources, you can run the following command:
 
 ```shell
 HOME ➤ kubectl get de
@@ -218,55 +198,32 @@ dynamicenv-sample        ready    3         3         3h17m
 dynamicenv-simple-test   ready    1         1         12s
 ```
 
-You can see that all subsets/consumers of each resource are ready.
+This output shows that all subsets/consumers of each resource are ready.
 
 The [status][] page contains full details for all fields.
 
 ## Workflows, Events, etc
 
-### Getting notified about modifications in resources we control
+### Getting Notified About Modifications in Resources We Control
 
-When we create a new _DynamicEnv_ custom resource it triggers
-a [reconcile loop][reconcile-loop]. Every time there's an event related to this specific manifest
-the reconcile loop is triggered. This means that every time we update the manifest the reconcile
-loop will run. However, this is not the only event that triggers the loop. We create and modify
-various resources (Deployments, DestinationRules and VirtualServices) and we want to get notified
-whenever they are modified (e.g. deleted by mistake). Since we are not limited to specific namespace
-when creating / updating resources we can not *own* this resource. We have to use other means to get
-notified when something has changed. We are using [event handlers][event-handlers] for this purpose.
-This happens in a form of annotation added to the resource. This
-annotation (`riskified.com/dynamic-environment`) if not empty, triggers configured reconcile loop.
+When we create a new _DynamicEnv_ custom resource, it triggers a [reconcile loop][reconcile-loop]. Every time there's an event related to this specific manifest, the reconcile loop is triggered. This means that every time we update the manifest, the reconcile loop will run. However, this is not the only event that triggers the loop. We create and modify various resources (Deployments, DestinationRules, and VirtualServices), and we want to get notified whenever they are modified (e.g., deleted by mistake). Since we are not limited to a specific namespace when creating/updating resources, we cannot "own" this resource. We have to use other means to get notified when something has changed. We use [event handlers][event-handlers] for this purpose. This occurs in the form of an annotation added to the resource. This annotation (`riskified.com/dynamic-environment`) triggers the configured reconcile loop when it is not empty.
 
-While this behaviour is behind the scenes and we should not really care about it we should pay
-attention to the following:
+While this behavior is behind the scenes and should not concern you, it's essential to keep in mind the following:
 
-* If we modify a resource created by _Dynamic Environment_ (Deployment / DestinationRule) not via
-  updating the _DynamicEnv_ resource these changes will probably get deleted (or even worse, it will
-  cause an unknown error).
-* If you see the annotation above in your resources (e.g. virtual services - these are not created
-  by us but they are updated) you'll know why.
+* If we modify a resource created by _Dynamic Environment_ (Deployment/DestinationRule) without updating the _DynamicEnv_ resource, these changes will likely be deleted (or may even cause an unknown error).
+* If you see the above annotation in your resources (e.g., virtual services - these are not created by us but they are updated), you'll know why.
 
-### How virtualServices are handled
+### How Virtual Services Are Handled
 
-Unlike the other resources we are handling, [Virtual services][VS] are not created by the operator.
-When we identify the service-hosts that points to the
-deployment specified in the _DynamicEnvironment_'s subset we loop through all the virtual services
-searching for ones that handles these service-hosts. We also handle [delegates][delegate]. Once
-identified we manipulate each of these virtual services to contain http routes that corresponds to
-our custom version. We also add annotation to set virtual service to get notification whenever this
-virtual service updates.
+Unlike the other resources we manage, [Virtual services][VS] are not created by the operator. When we identify the service-hosts that point to the deployment specified in the DynamicEnvironment's subset, we loop through all the virtual services to find the ones that handle these service-hosts. We also handle [delegates][delegate]. Once identified, we manipulate each of these virtual services to contain HTTP routes corresponding to our custom version. We also add an annotation to set the virtual service to receive notifications whenever this virtual service is updated.
 
 :::warning
 
-Note, currently we have a limitation that we do not support virtual services that handles more than
-one service-host from the list of identified service-hosts. If for example our deployment can be
-accessed by both `myservice` and `myservice-metrics` and there is a single _VirtualService_ that
-handle both of these service-hosts we would only add route for the service-host that was processed
-first and ignore the second.
+Currently, we have a limitation, as we do not support virtual services that handle more than one service-host from the list of identified service-hosts. For example, if our deployment can be accessed by both `myservice` and `myservice-metrics`, and there is a single _VirtualService_ that handles both of these service-hosts, we would only add a route for the service-host that was processed first and ignore the second.
 
 :::
 
-Upon deletion of the _DynamicEnvironment_ we also clean our routes from all the virtual services.
+Upon deletion of the _DynamicEnvironment_, we also clean up our routes from all the virtual services.
 
 [istio]: https://istio.io/
 

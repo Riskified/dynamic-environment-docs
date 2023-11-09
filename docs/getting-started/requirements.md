@@ -5,36 +5,26 @@ sidebar_position: 1
 
 # Requirements
 
-_DynamicEnvironment_ is distributed as a docker image. Since we're under heavy development make sure
-you read the [release notes][releases] of the version you're installing to make sure there are no
-extra requirements. Currently, you will also need the source code for generating the manifests /
-helm charts.
+_DynamicEnvironment_ is distributed as a Docker image. Since we are actively developing the project, it is essential to review the [release notes][releases] for the specific version you intend to install to ensure there are no additional requirements. Additionally, you will need access to the source code for generating deployment manifests and Helm charts.
 
 :::note
 
-Throughout this tutorial we assume docker, kubernetes, and Istio knowledge (e.g. we do not explain
-docker image names and registry setup).
+Throughout this tutorial, we assume that you have a basic understanding of Docker, Kubernetes, and Istio, including concepts like Docker image names and registry setup.
 
 :::
 
 :::warning
 
-If you're upgrading your version of _DynamicEnvironment_ make sure you read all
-the [release notes][releases] up to the version you're updating to - there could be breaking
-changes.
+If you are upgrading your instance of _DynamicEnvironment_, it's crucial to carefully read all the [release notes][releases] leading up to the version you are updating to, as there might be significant changes that require attention.
 
 :::
 
 ### Build Requirements
 
-As mentioned above you'll need the source code to generate the required deployment manifests. To set
-up a build environment follow the requirements and instructions in the [repository's readme](#)
-file (obviously, make sure you check out the tag corresponding to the version you're deploying).
+As mentioned earlier, you will require access to the source code to generate the necessary deployment manifests. To set up a build environment, please refer to the requirements and instructions outlined in the [repository's README](#). Ensure that you check out the tag corresponding to the version you intend to deploy.
 
 ### Runtime Requirements
 
-This controller requires recent versions of both _Kubernetes_ and _Istio_ to run. Check the [
-_Supported Versions_](../references/supported-versions.md) for tested versions. Note that other versions may
-also work but requires testing.
+For this controller to operate smoothly, you need recent versions of both _Kubernetes_ and _Istio_. Consult the [_Supported Versions_](../references/supported-versions.md) documentation for information on tested versions. Keep in mind that while other versions may work, they should undergo testing to ensure compatibility.
 
 [releases]: #
