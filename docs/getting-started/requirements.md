@@ -29,7 +29,7 @@ significant changes that require attention.
 
 As mentioned earlier, you will require access to the source code to generate the necessary
 deployment manifests. To set up a build environment, please refer to the requirements and
-instructions outlined in the [repository's README](#). Ensure that you check out the tag
+instructions outlined in the [repository's README][readme]. Ensure that you check out the tag
 corresponding to the version you intend to deploy.
 
 ### Runtime Requirements
@@ -39,4 +39,6 @@ Consult the [_Supported Versions_](../references/supported-versions.md) document
 information on tested versions. Keep in mind that while other versions may work, they should undergo
 testing to ensure compatibility.
 
-[releases]: #
+[releases]: https://github.com/Riskified/dynamic-environment/releases/latest/
+
+[readme]: https://github.com/Riskified/dynamic-environment/

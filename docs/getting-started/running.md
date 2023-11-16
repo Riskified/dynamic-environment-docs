@@ -196,7 +196,7 @@ Let's observe some of the changes:
       reviews-default-dynamicenv-sample   reviews       27m
 
 * We modified the relevant virtual service and added a route based on the configured match (skipped
-  part of the output). You can refer to the [reference documentation for virtual hosts](#) for more
+  part of the output). You can refer to the [reference documentation for virtual hosts][vh] for more
   details on manipulating virtual services.
 
       ✓ ~ ➤ kubectl get -n dynenv-tutorial vs reviews -o yaml
@@ -232,3 +232,5 @@ Finally, you can delete the dynamic environment and verify that everything retur
 state.
 
 [bookinfo]: https://istio.io/v1.17/docs/examples/bookinfo/
+ 
+[vh]: ../advanced/technical-overview.md#how-virtual-services-are-handled
