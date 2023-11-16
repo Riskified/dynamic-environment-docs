@@ -5,11 +5,14 @@ sidebar_position: 2
 
 # Installation
 
-Assuming you've successfully set up your environment, following the guidelines provided on the [requirements page](requirements.md), you can proceed to generate manifests and deploy the controller:
+Assuming you've successfully set up your environment, following the guidelines provided on
+the [requirements page](requirements.md), you can proceed to generate manifests and deploy the
+controller:
 
 ### Deployment via Kustomize
 
-1. Edit the `$REPOSITORY_ROOT/config/manager/manager.yaml` file and set the `image` field to the current version:
+1. Edit the `$REPOSITORY_ROOT/config/manager/manager.yaml` file and set the `image` field to the
+   current version:
 
 ```yaml
 # ...
@@ -62,7 +65,8 @@ make deploy
 
 ### Deploy via Helm
 
-Helm provides a `values.yaml` file (`helm/dynamic-environment/values.yaml`) with predefined values that you can override. At the very least, ensure you correctly set up the image details:
+Helm uses a `values.yaml` file (`helm/dynamic-environment/values.yaml`) with predefined values
+that you can override. At the very least, ensure you correctly set up the image details:
 
 ```yaml title=values.yaml
 [ ... ]
@@ -73,9 +77,11 @@ image:
   [ ... ]
 ```
 
-For more extensive customization, refer to the comments in the values file and compare them to the [custom settings](../references/custom-settings.md) for in-depth details.
+For more extensive customization, refer to the comments in the values file and compare them to
+the [custom settings](../references/custom-settings.md) for in-depth details.
 
-Once you've finished making your edits, execute the following command (from within the `helm` directory):
+Once you've finished making your edits, execute the following command (from within the `helm`
+directory):
 
 ```shell
 # you can edit this command to set values or specify alternative settings file
