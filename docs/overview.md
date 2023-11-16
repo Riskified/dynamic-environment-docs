@@ -6,26 +6,26 @@ slug: /
 
 # Overview
 
-DynamicEnv is a Kubernetes operator designed to empower developers by facilitating the creation of
-on-demand environments. It allows developers to seamlessly launch different versions of specific
-services within the same cluster. This approach offers a more efficient and cost-effective solution
-for testing and development compared to the traditional method of spinning up the entire
-architecture for each iteration. DynamicEnv leverages the mesh functionalities provided by
-[_Istio_][istio] to accomplish this task.
+DynamicEnv is an innovative Kubernetes operator created to empower developers by simplifying the
+process of launching on-demand environments. This operator enables developers to efficiently deploy
+different versions of specific services within a single Kubernetes cluster. This approach offers a
+cost-effective and streamlined solution for testing and development, as opposed to the conventional
+method of setting up the entire architecture for each iteration. DynamicEnv harnesses the
+capabilities of [_Istio_][istio] to achieve this goal.
 
-Consider the following service description:
+Let's consider a service description:
 
-![sample service graph](./assets/img/overview-sample.svg)
+![Sample Service Graph](./assets/img/overview-sample.svg)
 
-This is a service that consists of the following elements:
+This service consists of the following components:
 
 * Front-end
 * Backend (deployment is named `my-namespace/backend`)
 * Database
 
-Regular traffic goes through the _front-end_ to the _backend_ and to the database.
+Typically, regular traffic flows from the front-end to the backend and then to the database.
 
-When we want to test a new version of the backend we can create a new manifest as follows:
+When you need to test a new version of the backend, you can create a new manifest like this:
 
 ```yaml
 apiVersion: riskified.com/v1alpha1
@@ -45,15 +45,15 @@ spec:
           image: backend-image:test-version
 ```
 
-_DynamicEnv_ initiates the deployment of an additional backend (the "Tested Version" in the diagram)
-featuring the version that requires testing. It directs all incoming traffic with a "user" header
-set to "test-user" towards this newly launched backend.
+DynamicEnv triggers the deployment of an additional backend (referred to as the "Tested Version" in
+the diagram) featuring the version that requires testing. It directs all incoming traffic with a "
+user" header set to "test-user" toward this newly deployed backend.
 
 To enable testing, a test client can add a `user=test-user` header. If the front-end forwards this
-header to the backend (note, this is the responsibility of the app, not the operator) the request
-will be directed to the test backend [^1]. This ensures that requests are routed to the appropriate
-backend while maintaining connectivity with the upstream database.
+header to the backend (note that this is the application's responsibility, not the operator's), the
+request will be routed to the test backend [^1]. This ensures that requests are directed to the
+appropriate backend while maintaining connectivity with the upstream database.
 
-[^1]: alternatively, send a request directly to the backend with header `user=test-user`.
+[^1]: Alternatively, send a request directly to the backend with the header `user=test-user`.
 
 [istio]: https://istio.io/

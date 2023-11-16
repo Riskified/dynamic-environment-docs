@@ -5,29 +5,31 @@ sidebar_position: 3
 
 # Running the Sample Application
 
-In this section of the tutorial we will install a sample application and create a dynamic env to
-test a new version of a single service within the application. The application we'll use is slightly
-modified clone of the _BookInfo_ application that is distributed with _Istio_. For more details on
-Istio's bookinfo application check the [application page][bookinfo].
+In this section of the tutorial, we will demonstrate the installation of a sample application and
+how to create a dynamic environment to test a new version of a single service within the
+application. The application we're using is a slightly modified clone of the _BookInfo_ application
+that comes with _Istio_. For more detailed information about Istio's BookInfo application, you can
+refer to the [application page][bookinfo].
 
 :::note
 
-Before continuing make sure you followed the previous steps of this tutorial and you have a working
-kubernetes cluster with required dependencies and _Dynamic Environment_ deployed.
+Before proceeding, ensure that you have followed the prerequisites outlined in the previous sections
+of this tutorial. You should have a functional Kubernetes cluster with the required dependencies and
+_Dynamic Environment_ deployed.
 
 :::
 
 ## Installing the BookInfo Application
 
-Download the [tutorial files](../assets/files/running-tutorial.zip), extract the archive, and
-install `bookinfo.yml` manifest:
+Begin by downloading the [tutorial files](../assets/files/running-tutorial.zip), extracting the
+archive, and then installing the `bookinfo.yml` manifest using the following command:
 
 ```shell
 kubectl apply -f bookinfo.yml
 ```
 
-This will create a BookInfo application running in the `dynenv-tutorial` namespace. It will install
-4 services:
+This will create a BookInfo application running in the `dynenv-tutorial` namespace. It consists of
+four services:
 
 ```shell
 ✓ ~ ➤ kubectl get -n dynenv-tutorial service
@@ -38,7 +40,7 @@ ratings       ClusterIP   10.96.215.213   <none>        9080/TCP   3m40s
 reviews       ClusterIP   10.96.106.203   <none>        9080/TCP   3m40s
 ```
 
-Also note the configured routes within the _reviews_ virtual service (only a single route):
+Additionally, note the configured routes within the _reviews_ virtual service (only a single route):
 
 ```shell
       ✓ ~ ➤ kubectl get -n dynenv-tutorial vs reviews -o yaml
@@ -59,17 +61,19 @@ Also note the configured routes within the _reviews_ virtual service (only a sin
               subset: shared
 ```
 
-Access the `productpage` service (e.g. by creating a port-forward). Go to the `/productpage` url (
-e.g. `http://localhost:9080/productpage`). You should see something similar to this:
+You can access the `productpage` service, for example, by creating a port-forward. Navigate to
+the `/productpage` URL (e.g., `http://localhost:9080/productpage`). You should see something similar
+to this:
 
 ![default view](../assets/img/bookinfo-shared-version.png)
 
-## Testing the Coloured Rating using Dynamic Environment
+## Testing the Colored Rating using Dynamic Environment
 
-Now that you developed a coloured stars rating element you want to test it before distributing it to
-the world. In our example you updated the `reviews` application and uploaded a docker image to the
-registry. Now let's create a _dynamic environemnt_ manifest to test our application. Here's the
-final manifest (is is also included in the downloaded `tutorial.zip` archive):
+Now, let's say you've developed a feature like colored stars in the ratings element, and you want to
+test it before making it available to all users. In this example, you've made updates to
+the `reviews` application and uploaded a Docker image to the registry. To test your application, you
+can create a dynamic environment manifest. Here's the final manifest (also included in the
+downloaded `tutorial.zip` archive):
 
 ```yaml title=dynamicenv-bookinfo.yml
 ---
@@ -90,26 +94,27 @@ spec:
 
 :::note
 
-A reference documentation for the `DynamicEnv` CRD can be found [here](../references/crd.md).
+You can find reference documentation for the `DynamicEnv` Custom Resource Definition (
+CRD) [here](../references/crd.md).
 
 :::
 
 A few notes about the manifest:
 
-* Namespace: The _dynamic environment_ custom resource is not restricted to be deployed in the same
-  namespace as the resources it manipulates. It could be deployed on any namespace.
-* Match: For testing we're matching against a header of `end-user` with exact value of `jason` (in
-  our application we need to log in as `jason` for this header to be created).
-* Subset: In our case we replace only a single subset (identified by it's _deployment_ name and
-  namespace). Note that in our case we're only changing the image.
+* Namespace: The _dynamic environment_ custom resource is not limited to deployment in the same
+  namespace as the resources it manipulates. It can be deployed in any namespace.
+* Match: For testing, we're matching against a header named `end-user` with the exact value
+  of `jason`. In our application, you need to log in as `jason` for this header to be created.
+* Subset: In our case, we're replacing only a single subset identified by its _deployment_ name and
+  namespace. Please note that we're only changing the image.
 
-Apply this manifest:
+To apply this manifest, run the following command:
 
 ```shell
 kubectl apply -f dynamicenv-bookinfo.yml
 ```
 
-Now you can view the dynamic environment status by running:
+Now, you can check the dynamic environment's status by running:
 
 ```shell
 ✓ ~ ➤ kubectl get de dynamicenv-sample -o yaml
@@ -149,27 +154,27 @@ status:
 
 A few things to note about this status:
 
-* You can see in the `status:` section that our global `state:` is _ready_.
-* Also, for each subset you can see all the elements that we created or modified to configure the
-  routing. If there are errors they should also appear here.
-* You can see that we've added finalizers. We will use these finalizers (and the various state
-  elements) to restore previous state on deletion.
-* You can also note that for each subset we create a new deployment, a new destination rule and we
-  are editing the relevant virtual services.
-* For further details about the status see the [reference](../references/crd.md#dynamicenvstatus)
-  and the corresponding section in
-  the [technical overview](../advanced/technical-overview.md#status-explained) document.
+* In the `status` section, you can see that the global `state` is _ready_.
+* For each subset, you can see all the elements that have been created or modified to configure the
+  routing. Any errors should also appear here.
+* Finalizers are added, which will be used to restore the previous state upon deletion.
+* For each subset, a new deployment, a new destination rule, and relevant virtual services are
+  created or modified.
+* For more details about the status, you can refer to
+  the [reference documentation](../references/crd.md#dynamicenvstatus) and the corresponding section
+  in the [technical overview](../advanced/technical-overview.md#status-explained) document.
 
-Now, let's test our application. Refresh the product page. Nothing should change. Try to login as
-various usernames (no password is needed) and you should still see the black stars rating. However,
-if you login as user _jason_ you should see something like this (note the coloured ratings):
+Now, let's test our application. Refresh the product page. nothing should change. Try logging in
+with various usernames (no password is needed), and you should still see the black stars rating.
+However, if you log in as the user _jason_, you should see something like this (notice the colored
+ratings):
 
 ![alternate version view](../assets/img/bookinfo-alternate-version.png)
 
-Let's see some of the changes:
+Let's observe some of the changes:
 
-* Added deploys (the last deployment is the one we created - the name contains the name of the
-  dynamic environment):
+* Added deployments (the last deployment is the one created for the dynamic environment - its name
+  contains the name of the dynamic environment):
 
       ✓ ~ ➤ kubectl get -n dynenv-tutorial deploy
       NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
@@ -180,7 +185,7 @@ Let's see some of the changes:
       reviews                             1/1     1            1           73m
       reviews-default-dynamicenv-sample   1/1     1            1           25m
 
-* Added destination rule (same name convention as the deployments):
+* Added destination rules (following the same naming convention as the deployments):
 
       ✓ ~ ➤ kubectl get -n dynenv-tutorial dr
       NAME                                HOST          AGE
@@ -191,8 +196,8 @@ Let's see some of the changes:
       reviews-default-dynamicenv-sample   reviews       27m
 
 * We modified the relevant virtual service and added a route based on the configured match (skipped
-  part of the output) - See the [reference documentation for virtual hosts](#) for more details on
-  manipulating virtual services:
+  part of the output). You can refer to the [reference documentation for virtual hosts][vh] for more
+  details on manipulating virtual services.
 
       ✓ ~ ➤ kubectl get -n dynenv-tutorial vs reviews -o yaml
       apiVersion: networking.istio.io/v1beta1
@@ -223,6 +228,9 @@ Let's see some of the changes:
               host: reviews
               subset: shared
 
-Now delete the dynamic environment and verify that everything is back to normal...
+Finally, you can delete the dynamic environment and verify that everything returns to its original
+state.
 
 [bookinfo]: https://istio.io/v1.17/docs/examples/bookinfo/
+ 
+[vh]: ../advanced/technical-overview.md#how-virtual-services-are-handled
