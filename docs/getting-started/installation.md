@@ -12,7 +12,7 @@ controller:
 ### Deployment via Kustomize
 
 1. Edit the `$REPOSITORY_ROOT/config/manager/manager.yaml` file and set the `image` field to the
-   current version:
+   current version (see below example of defining the image as an environment variable):
 
 ```yaml
 # ...
@@ -24,7 +24,7 @@ spec:
       # ...
       containers:
         # ...
-        image: riskified/dynamicenv:TAG
+        image: ghcr.io/Riskified/dynamic-environment:TAG
 ```
 
 You can further customize the deployment by adjusting the following settings:
@@ -61,6 +61,8 @@ Once you have configured everything, deploy the controller using the following c
 
 ```shell
 make deploy
+# or with image as environment varible
+make deploy IMG="ghcr.io/Riskified/dynamic-environment:TAG"
 ```
 
 ### Deploy via Helm
@@ -71,7 +73,7 @@ that you can override. At the very least, ensure you correctly set up the image 
 ```yaml title=values.yaml
 [ ... ]
 image:
-  repository: riskified/dynamicenv
+  repository: ghcr.io/Riskified/dynamic-environment
   tag: TAG
   pullPolicy: IfNotPresent
   [ ... ]
