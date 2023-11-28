@@ -1,5 +1,6 @@
 ---
 sidebar_label: 'Tips and Tricks'
+sidebar_position: 2
 ---
 
 # Tips and Tricks

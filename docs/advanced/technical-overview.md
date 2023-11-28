@@ -1,5 +1,6 @@
 ---
 sidebar_label: 'Technical Overview'
+sidebar_position: 1
 ---
 
 # Technical Overview

@@ -5,10 +5,10 @@ sidebar_position: 1
 
 # Requirements
 
-_DynamicEnvironment_ is distributed as a Docker image. Since we are actively developing the project,
-it is essential to review the [release notes][releases] for the specific version you intend to
-install to ensure there are no additional requirements. Additionally, you will need access to the
-source code for generating deployment manifests and Helm charts.
+_DynamicEnvironment_ is distributed as a [Docker image][packages]. Since we are actively developing
+the project, **it is essential to review the [release notes][releases] for the specific release
+version you intend to install to ensure there are no additional requirements.** Additionally, you
+will need access to the source code for generating deployment manifests and Helm charts.
 
 :::note
 
@@ -32,6 +32,12 @@ deployment manifests. To set up a build environment, please refer to the require
 instructions outlined in the [repository's README][readme]. Ensure that you check out the tag
 corresponding to the version you intend to deploy.
 
+### Building from Source
+
+There are occasions that you'll want to build the operator from source (e.g., if you want to
+use [extensions](../advanced/extensions.md)). For instructions on building the operator from source
+please consult the [repository's README][readme].
+
 ### Runtime Requirements
 
 For this controller to operate smoothly, you need recent versions of both _Kubernetes_ and _Istio_.
@@ -42,3 +48,5 @@ testing to ensure compatibility.
 [releases]: https://github.com/Riskified/dynamic-environment/releases/latest/
 
 [readme]: https://github.com/Riskified/dynamic-environment/
+
+[packages]: https://github.com/Riskified/dynamic-environment/pkgs/container/dynamic-environment
