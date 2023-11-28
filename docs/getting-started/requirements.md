@@ -12,8 +12,8 @@ will need access to the source code for generating deployment manifests and Helm
 
 :::note
 
-Throughout this tutorial, we assume that you have a basic understanding of Docker, Kubernetes, and
-Istio, including concepts like Docker image names and registry setup.
+Throughout this tutorial, we assume you have a basic understanding of Docker, Kubernetes, and Istio,
+including concepts like Docker image names and registry setup.
 
 :::
 

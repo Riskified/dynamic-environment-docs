@@ -14,8 +14,8 @@ refer to the [application page][bookinfo].
 :::note
 
 Before proceeding, ensure that you have followed the prerequisites outlined in the previous sections
-of this tutorial. You should have a functional Kubernetes cluster with the required dependencies and
-_Dynamic Environment_ deployed.
+of this tutorial. You should have a functional Kubernetes cluster with the required dependencies,
+and _Dynamic Environment_ deployed.
 
 :::
 
@@ -164,7 +164,7 @@ A few things to note about this status:
   the [reference documentation](../references/crd.md#dynamicenvstatus) and the corresponding section
   in the [technical overview](../advanced/technical-overview.md#status-explained) document.
 
-Now, let's test our application. Refresh the product page. nothing should change. Try logging in
+Now, let's test our application. Refresh the product page. Nothing should change. Try logging in
 with various usernames (no password is needed), and you should still see the black stars rating.
 However, if you log in as the user _jason_, you should see something like this (notice the colored
 ratings):
@@ -232,5 +232,5 @@ Finally, you can delete the dynamic environment and verify that everything retur
 state.
 
 [bookinfo]: https://istio.io/v1.17/docs/examples/bookinfo/
- 
-[vh]: ../advanced/technical-overview.md#how-virtual-services-are-handled
+
+d  ]: ../advanced/technical-overview.md#how-virtual-services-are-handled
