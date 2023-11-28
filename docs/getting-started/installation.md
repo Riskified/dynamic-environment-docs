@@ -68,7 +68,7 @@ make deploy IMG="ghcr.io/Riskified/dynamic-environment:TAG"
 ### Deploy via Helm
 
 Helm uses a `values.yaml` file (`helm/dynamic-environment/values.yaml`) with predefined values
-that you can override. At the very least, ensure you correctly set up the image details:
+you can override. At the very least, ensure you correctly set up the image details:
 
 ```yaml title=values.yaml
 [ ... ]

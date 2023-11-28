@@ -77,7 +77,7 @@ tested application's responsibility to forward headers if needed.
 ### Subsets
 
 Subsets are named after _Istio_'s subsets, but they are not identical; they are conceptually
-similar ( representing a subset of service endpoints corresponding to a specific custom version).
+similar (representing a subset of service endpoints corresponding to a specific custom version).
 
 * We identify the deployment we want to override based on the _namespace_ / _name_ provided in the
   _DynamicEnv_ manifest. We then clone it using
@@ -243,12 +243,15 @@ When we create a new _DynamicEnv_ custom resource, it triggers a [reconcile loop
 Every time there's an event related to this specific manifest, the reconcile loop is triggered. This
 means that every time we update the manifest, the reconcile loop will run. However, this is not the
 only event that triggers the loop. We create and modify various resources (Deployments,
-DestinationRules, and VirtualServices), and we want to get notified whenever they are modified (
-e.g., deleted by mistake). Since we are not limited to a specific namespace when creating/updating
-resources, we cannot "own" this resource. We have to use other means to get notified when something
-has changed. We use [event handlers][event-handlers] for this purpose. This occurs in the form of an
-annotation added to the resource. This annotation (`riskified.com/dynamic-environment`) triggers the
-configured reconcile loop when it is not empty.
+DestinationRules, and VirtualServices), and we want to get notified whenever they are modified
+(e.g., deleted by mistake).
+
+Since we are not limited to a specific namespace when creating/updating resources, we cannot "own"
+this resource. We have to use other means to get notified when something has changed.
+
+We use [event handlers][event-handlers] for this purpose. This occurs in the form of an annotation
+added to the resource. This annotation (`riskified.com/dynamic-environment`) triggers the configured
+reconcile loop when it is not empty.
 
 While this behavior is behind the scenes and should not concern you, it's essential to keep in mind
 the following:
