@@ -19,8 +19,9 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'Riskified', // Usually your GitHub org/user name.
-  projectName: 'DynamicEnvironment', // Usually your repo name.
-
+  projectName: 'dynamic-environment-doc', // Usually your repo name.
+  deploymentBranch: 'gh-pages',
+  
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
