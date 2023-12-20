@@ -11,15 +11,15 @@ const config = {
   favicon: 'img/de-logo.svg',
 
   // Set the production url of your site here
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://Riskified.github.io',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
-  baseUrl: '/',
+  baseUrl: '/dynamic-environment-docs/',
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'Riskified', // Usually your GitHub org/user name.
-  projectName: 'dynamic-environment-doc', // Usually your repo name.
+  projectName: 'dynamic-environment-docs', // Usually your repo name.
   deploymentBranch: 'gh-pages',
   
   onBrokenLinks: 'throw',
