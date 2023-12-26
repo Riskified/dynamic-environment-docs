@@ -31,8 +31,8 @@ You can further customize the deployment by adjusting the following settings:
 
 * [_VersionLabel_](../references/custom-settings.md#versionlabel-and-defaultversion)
 * [_DefaultVersion_](../references/custom-settings.md#versionlabel-and-defaultversion)
-* [
-  _--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
+* [_--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
+* _Log Level_ (set to debug - see commented option below)
 
 These settings can be changed in the `config/manager/manager.yaml` file:
 
@@ -52,6 +52,9 @@ spec:
           - version <-- this should be replaced to change the label
           - --default-version
           - shared <-- this should be replaced to change the default version
+        # uncomment the next two lines to set log level to debug (also error is valid value, default is info)
+        # - --zap-log-level
+        # - debug
         # Uncomment the lines below (and modify as needed) to specify labels to be removed (comma-separated list)
         #- --remove-labels
         #- argocd.argoproj.io/instance
