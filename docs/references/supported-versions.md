@@ -12,5 +12,6 @@ versions:
 | `v1.21.x`          | `v1.12.2`     |
 | `v1.23.x`          | `v1.14.6`     |
 | `v1.25.x`          | `v1.16.2`     |
+| `v1.29.x`          | `v1.20.0`     |
 
 Any combination of these versions should work.
