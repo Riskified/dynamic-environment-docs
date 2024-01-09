@@ -134,7 +134,7 @@ spec:
 status:
   state: ready
   subsets-status:
-    dynamicenv-tutorial/reviews:
+    reviews-default-dynamicenv-sample:
       deployment:
         name: reviews-default-dynamicenv-sample
         namespace: dynenv-tutorial

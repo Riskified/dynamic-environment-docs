@@ -133,7 +133,7 @@ deployment name and namespace):
 
 ```yaml
 subsetsStatus:
-  status-updates/details:
+  details-default-dynamicenv-status-updates:
     deployment:
       name: details-default-dynamicenv-status-updates
       namespace: status-updates
@@ -166,7 +166,7 @@ fields (The state is still `running` because one service-host - `details` - is a
 status:
   state: ready
   subsetsStatus:
-    multiple-services-per-deployment/details:
+    details-default-dynamicenv-multiple-services-per-deploym:
       deployment:
         name: details-default-dynamicenv-multiple-services-per-deploym
         namespace: multiple-services-per-deployment
@@ -197,7 +197,7 @@ the `ignored-missing-destination-rule` status on one of the destination rules):
 status:
   state: degraded
   subsetsStatus:
-    multiple-services-scenarios-no-working-single-host/details:
+    details-default-dynamicenv-multiple-services-scenarios-n:
       deployment:
         name: details-default-dynamicenv-multiple-services-scenarios-n
         namespace: multiple-services-scenarios-no-working-single-host

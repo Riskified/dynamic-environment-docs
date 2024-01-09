@@ -79,6 +79,11 @@ const config = {
           // },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
+            type: 'docsVersionDropdown',
+            position: 'right',
+            dropdownActiveClassDisabled: true,
+          },
+          {
             href: 'https://github.com/Riskified/dynamic-environment-docs',
             label: 'GitHub',
             position: 'right',
