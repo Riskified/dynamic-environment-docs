@@ -31,8 +31,7 @@ You can further customize the deployment by adjusting the following settings:
 
 * [_VersionLabel_](../references/custom-settings.md#versionlabel-and-defaultversion)
 * [_DefaultVersion_](../references/custom-settings.md#versionlabel-and-defaultversion)
-* [
-  _--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
+* [_--remove-labels_](../references/custom-settings.md#labels-to-remove-when-creating-overriding-deployments)
 
 These settings can be changed in the `config/manager/manager.yaml` file:
 
