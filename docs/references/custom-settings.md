@@ -34,8 +34,8 @@ This removal process is configurable on a global scale for the entire controller
 * When deploying using _Kustomize_, you can customize the labels to remove by modifying
   the `--remove-labels` flag (and the corresponding parameter). Additional labels can be added to
   the list as needed. Detailed instructions are available on
-  the [installation page](../getting-started/installation.md#deploy-using-kustomize).
-* When deploying via [Helm](../getting-started/installation.md#deploy-using-helm), you can specify
+  the [installation page](../getting-started/installation.md#deployment-via-kustomize).
+* When deploying via [Helm](../getting-started/installation.md#deploy-via-helm), you can specify
   the `labelsToRemove` setting.
 
 [DR]: https://istio.io/latest/docs/reference/config/networking/destination-rule/
