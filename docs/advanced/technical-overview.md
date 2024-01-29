@@ -23,11 +23,9 @@ this section to prevent confusion:
 ### IstioMatches
 
 IstioMatches corresponds to a subset of [Istio's HTTPMatchRequest][match] (specifically _headers_
-and _source labels_). Currently, _DynamicEnvironment_ IstioMatches are translated to
-HTTPMatchRequest as follows:
-
-* All headers are grouped into a single HTTPMatchRequest.
-* All source labels are grouped into a single HTTPMatchRequest.
+and _source labels_). _DynamicEnvironment_'s IstioMatches are translated to HTTPMatchRequest as
+follows, each item in the list of istio matches (regardless if it consists of headers, source
+labels, or both) corresponds to a single HttpMatchRequest.
 
 So, if you have the following IstioMatches object:
 
@@ -37,8 +35,10 @@ spec:
   istioMatches:
     - headers:
         end-user:
-    - sourceLabels:
+      sourceLabels:
         end-user: json
+    - sourceLabels:
+        end-user: joe
   [ ... ]
 ```
 
@@ -52,12 +52,14 @@ spec:
         - headers:
             end-user:
               prefix: jason
+          sourceLabels:
+            end-user: json
       route:
         - destination:
             [ ... ]
     - match:
         - sourceLabels:
-            end-user: json
+            end-user: joe
       route:
         - destination:
             [ ... ]
